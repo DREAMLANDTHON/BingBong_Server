@@ -15,11 +15,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Evaluation {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "evaluation_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "member_id")
     private Member parent;
+
     private Float toxic; // 유해
     private Float insult; // 모욕
     private Float profanity; // 욕설

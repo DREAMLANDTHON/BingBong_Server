@@ -2,6 +2,7 @@ package com.bingbong.consult.classroom.domain;
 
 import com.bingbong.consult.classroomMember.domain.ClassRoomMember;
 import com.bingbong.consult.member.domain.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,13 +19,17 @@ import java.util.List;
 @AllArgsConstructor
 public class ClassRoom {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "class_room_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
+
     private String classRoomName;
     private String description;
     private String groupCode;
     private Integer year;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="member_id")
     private Member teacher;
+
 }

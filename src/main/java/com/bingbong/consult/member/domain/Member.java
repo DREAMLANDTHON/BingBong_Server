@@ -18,11 +18,15 @@ import java.util.List;
 @AllArgsConstructor
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "member_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, name="member_id")
     private Long id;
     private String name;
     private String email;
     private String childName;
     private String kakaoKey;
+
+//    @OneToMany(fetch = FetchType.LAZY)
+//    @JoinColumn( = "class_room_id")
+//    private List<ClassRoomMember> classRoomMember;
 }

@@ -5,6 +5,7 @@ import com.bingbong.consult.chatmessage.domain.ChatMessageRepo;
 import com.bingbong.consult.chatroom.domain.ChatRoom;
 import com.bingbong.consult.evaluation.domain.Evaluation;
 import com.bingbong.consult.evaluation.domain.repository.EvaluationRepository;
+import com.bingbong.consult.evaluation.presentation.response.AnalyticsReportResponse;
 import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.mlp.GoogleCloudTextAnalysis;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
@@ -68,5 +69,9 @@ public class EvaluationService {
             }
         }
         return ret;
+    }
+
+    public AnalyticsReportResponse getReport(Long id) {
+        evaluationRepository.findByMemberId(id);
     }
 }

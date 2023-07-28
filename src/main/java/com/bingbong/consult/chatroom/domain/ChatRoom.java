@@ -10,11 +10,13 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 //@SQLDelete(sql = "UPDATE ChatRoom SET deleted = true WHERE id = ?")
@@ -40,10 +42,18 @@ public class ChatRoom {
 //    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 //    @JoinColumn( name = "chat_message_id")
 //    private List<ChatMessage> chatMessages;
-
-
     private String roomToken;
 
+    public static ChatRoom from (ClassRoom classRoom, Member member){
+        return ChatRoom.builder()
+                .classRoom(classRoom)
+                .parent(member)
+                .timePin(LocalDateTime.now())
+                .roomToken(UUID.randomUUID().toString())
+                .build();
+    }
 
-
+    public void update() {
+        this.timePin = LocalDateTime.now();
+    }
 }

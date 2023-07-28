@@ -11,6 +11,5 @@ public class ApplyRequest {
     private Long memberId;
     private Long classId;
     private String subject;
-    private int status;
     private String type;
 }

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class EvaluationController {
     private final EvaluationService evaluationService;
 
-//    @GetMapping("/evaluations/analytics/{id}")
-//    public ResponseEntity<AnalyticsReportResponse> createEvaluation(@PathVariable Long id) {
-//        return ResponseEntity.ok(evaluationService.getReport(id));
-//    }
+    @GetMapping("/evaluations/analytics/{id}")
+    public ResponseEntity<AnalyticsReportResponse> createEvaluation(@PathVariable Long id) {
+        return ResponseEntity.ok(evaluationService.getReport(id));
+    }
 }

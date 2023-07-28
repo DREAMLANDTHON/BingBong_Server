@@ -2,10 +2,12 @@ package com.bingbong.consult.evaluation.application;
 
 import com.bingbong.consult.chatmessage.domain.ChatMessage;
 import com.bingbong.consult.chatmessage.domain.ChatMessageRepo;
+import com.bingbong.consult.chatroom.application.ChatRoomService;
 import com.bingbong.consult.chatroom.domain.ChatRoom;
 import com.bingbong.consult.evaluation.domain.Evaluation;
 import com.bingbong.consult.evaluation.domain.repository.EvaluationRepository;
 import com.bingbong.consult.evaluation.presentation.response.AnalyticsReportResponse;
+import com.bingbong.consult.evaluation.presentation.response.FiveCriteria;
 import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.mlp.GoogleCloudTextAnalysis;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
@@ -44,13 +46,16 @@ public class EvaluationService {
     @Autowired
     private ChatMessageRepo chatMessageRepo;
 
+    @Autowired
+    private ChatRoomService chatRoomService;
 
     @Transactional
     public String analyse(ChatRoom chatRoom) {
         LocalDateTime start = chatRoom.getTimePin();
-        chatRoom.update(); // timePin update
+        chatRoomService.findChatRoom(chatRoom.getId()).update();
         LocalDateTime end = LocalDateTime.now();
         Optional<List<ChatMessage>> messages = chatMessageRepo.findBySendAtGreaterThanEqualAndSendAtLessThanEqual(start, end);
+        System.out.println("messages = " + messages);
         String ret="";
         ChatMessage temp;
         if(messages.isPresent()){
@@ -58,9 +63,10 @@ public class EvaluationService {
             for(int i=0; i<messages.get().size();i++){
                 temp = messages.get().get(i);
                 if(temp.getMember().getId() != teacher.getId()){
-                    ret.concat(" "+temp.getMessage());
+                    ret = ret + " " + temp.getMessage();
                 }
             }
+            System.out.println(ret);
             try {
                 this.create(messages.get().get(0).getMember().getId(), GoogleCloudTextAnalysis.analyze(ret) );
 
@@ -71,7 +77,30 @@ public class EvaluationService {
         return ret;
     }
 
-//    public AnalyticsReportResponse getReport(Long id) {
-//        evaluationRepository.findByMemberId(id);
-//    }
+    public AnalyticsReportResponse getReport(Long id) {
+        List<Evaluation> evaluations = evaluationRepository.findByParentId(id);
+        Float toxic = 0f;
+        Float insult = 0f;
+        Float profanity = 0f;
+        Float derogatory = 0f;
+        Float violent = 0f;
+        for (Evaluation evaluation : evaluations) {
+            toxic += evaluation.getToxic();
+            insult += evaluation.getInsult();
+            profanity += evaluation.getProfanity();
+            derogatory += evaluation.getDerogatory();
+            violent += evaluation.getViolent();
+        }
+        FiveCriteria average = FiveCriteria.builder()
+                .toxic(toxic)
+                .insult(insult)
+                .profanity(profanity)
+                .derogatory(derogatory)
+                .violent(violent)
+                .build();
+        return AnalyticsReportResponse.builder()
+                .recentReport(average)
+                .averageReport(average)
+                .build();
+    }
 }

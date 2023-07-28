@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class consultReq {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
+    @Column(name = "consult_req_id", nullable = false)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member reqMem;

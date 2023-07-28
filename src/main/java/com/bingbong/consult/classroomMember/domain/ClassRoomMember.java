@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class ClassRoomMember {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
+    @Column(name = "class_room_member_id", nullable = false)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "member_id")

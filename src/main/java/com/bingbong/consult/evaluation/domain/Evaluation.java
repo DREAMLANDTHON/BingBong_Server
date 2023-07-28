@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
+    @Column(name = "evaluation_id", nullable = false)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member parent;

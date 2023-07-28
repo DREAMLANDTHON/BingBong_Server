@@ -1,6 +1,14 @@
 package com.bingbong.consult.stomp;
+import com.bingbong.consult.apply.application.ApplyService;
+import com.bingbong.consult.apply.domain.Apply;
 import com.bingbong.consult.chatmessage.application.ChatMessageService;
 import com.bingbong.consult.chatmessage.domain.ChatMessage;
+import com.bingbong.consult.chatroom.application.ChatRoomService;
+import com.bingbong.consult.chatroom.domain.ChatRoom;
+import com.bingbong.consult.classroom.application.ClassRoomService;
+import com.bingbong.consult.classroom.domain.ClassRoom;
+import com.bingbong.consult.member.application.MemberService;
+import com.bingbong.consult.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,33 +30,43 @@ public class StompController {
     @Autowired
     private ChatMessageService chatMessageService;
 
+    @Autowired
+    private ChatRoomService chatRoomService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private ApplyService applyService;
 
-    //Client가 SEND할 수 있는 경로
-    //stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMapping 경로가 병합됨
-    //"/pub/chat/enter"
-//    @MessageMapping(value = "/chat/enter")
-//    public void enter(@RequestBody ChatMessageRequest message){
-//        User user = userService.findById(message.getWriterId());
-//        message.setMessage(user.getName() + "님이 채팅방에 참여하였습니다.");
-//        template.convertAndSend("/sub/chat/room/" + message.getChatRoomId(), message);
-//    }
+    @Autowired
+    private ClassRoomService classRoomService;
 
-    @MessageMapping(value = "/chat/{classId}/{roomToken}")
-    public void message(@PathVariable("classId") Long classId, @PathVariable("roomToken") String roomToken, @RequestBody MessageRequest request){
-//        System.out.println(request.getMessage());
-        if(request.getType().equals("message")){
-            chatMessageService.save(roomToken, request);
-            template.convertAndSend("/sub/chat/"+ classId.toString() +"/" + roomToken, request);
 
-        } else if(request.getType().equals("newapply")){
 
-        } else if(request.getType().equals("chatbot")){
-
-        } else if(request.getType().equals("acceptapply")){
-
-        } else { // 상담종료
-
+    @MessageMapping(value = "/apply/{classId}")
+    public void apply(@PathVariable Long classId, @RequestBody ApplyRequest request) {
+        if (request.getType().equals("apply")) {
+            ChatRoom chatRoom = chatRoomService.findByMemberAndClassRoom(request.getMemberId(), classId );
+            Apply ret = applyService.save(request, chatRoom);
+            if(ret != null) template.convertAndSend("/sub/apply/" + classId, ret.getId());
+            else template.convertAndSend("/sub/apply/" + classId, "Apply Failed");
         }
-//        chatMessageService.save(ChatMessage.from(message, roomToken));
-//        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
+
+    @MessageMapping(value = "/start/{chatRoomId}")
+    public void start(@PathVariable Long chatRoomId, @RequestBody StartRequest request) {
+        if (request.getType().equals("start")) {
+            ChatRoom chatRoom = chatRoomService.findChatRoom(request.getChatRoomId());
+            if(chatRoom != null) template.convertAndSend("/sub/start/" + chatRoom.getRoomToken(), "start");
+            else template.convertAndSend("/sub/start/" + chatRoom.getRoomToken(), "start Failed");
+        }
+    }
+
+    @MessageMapping(value = "/chat/{roomToken}")
+    public void message(@PathVariable("roomToken") String roomToken, @RequestBody MessageRequest request) {
+//        System.out.println(request.getMessage());
+        if (request.getType().equals("message")) {
+            chatMessageService.save(roomToken, request);
+            template.convertAndSend("/sub/chat/" + roomToken, request);
+        }
+    }
+}

@@ -36,4 +36,8 @@ public class ChatRoomService {
         return ret;
     }
 
+    @Transactional
+    public ChatRoom findByMemberAndClassRoom(Long memberId, Long classId) {
+        return chatRoomRepo.findByMemberAndClassRoom(memberId, classId);
+    }
 }

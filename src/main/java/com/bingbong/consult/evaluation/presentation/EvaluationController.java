@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class EvaluationController {
     private final EvaluationService evaluationService;
 
-    @PostMapping("/evaluations/{id}")
-    public ResponseEntity<Long> createEvaluation(@PathVariable Long id) {
-        return ResponseEntity.ok(evaluationService.create(id));
-    }
+//    @PostMapping("/evaluations/{id}")
+//    public ResponseEntity<Long> createEvaluation(@PathVariable Long id) {
+//        return ResponseEntity.ok(evaluationService.create(id));
+//    }
 }

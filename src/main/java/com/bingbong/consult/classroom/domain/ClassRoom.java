@@ -1,5 +1,6 @@
 package com.bingbong.consult.classroom.domain;
 
+import com.bingbong.consult.classroomMember.domain.ClassRoomMember;
 import com.bingbong.consult.member.domain.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity

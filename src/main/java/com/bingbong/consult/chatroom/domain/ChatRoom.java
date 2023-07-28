@@ -1,4 +1,5 @@
 package com.bingbong.consult.chatroom.domain;
+import com.bingbong.consult.chatmessage.domain.ChatMessage;
 import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.member.domain.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +35,11 @@ public class ChatRoom {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime timePin;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn( name = "chat_message_id")
+    private List<ChatMessage> chatMessages;
+
     private String roomToken;
 
 

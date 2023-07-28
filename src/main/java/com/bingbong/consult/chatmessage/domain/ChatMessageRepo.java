@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChatMessageRepo extends JpaRepository<ChatMessage, Long> {
-    ChatRoom findByRoomToken(String roomToken);
+
 }

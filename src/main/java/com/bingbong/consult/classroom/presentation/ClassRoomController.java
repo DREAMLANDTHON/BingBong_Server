@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClassRoomController {
     private final ClassRoomService classRoomService;
 
+    /**
+     * 회원가입
+     * */
     @PostMapping("/classRoom")
     public ResponseEntity<Long> registerMember(@RequestBody ClassRoomRequest form) {
         return ResponseEntity.ok(classRoomService.create(form));

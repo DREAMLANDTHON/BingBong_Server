@@ -14,4 +14,7 @@ public interface ChatMessageRepo extends JpaRepository<ChatMessage, Long> {
 
 //    @Query("select m from ChatMessage m where m.sendAt between :start and :end")
     Optional<List<ChatMessage>> findBySendAtGreaterThanEqualAndSendAtLessThanEqual(LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+    @Query("select m from ChatMessage m where m.chatRoom.id = :chatRoomId")
+    List<ChatMessage> findByChatRoomId(Long chatRoomId);
 }

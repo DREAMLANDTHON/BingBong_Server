@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
 
 @Service
@@ -32,5 +33,11 @@ public class ChatMessageService {
         Member member = memberRepository.findById(request.getSenderId()).get();
         chatMessageRepo.save(ChatMessage.from(request, chatRoom, member));
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChatMessage> findByChatRoomId(Long chatRoomId) {
+        List<ChatMessage> ret = chatMessageRepo.findByChatRoomId(chatRoomId);
+        return ret;
     }
 }

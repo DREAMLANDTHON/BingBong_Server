@@ -62,13 +62,19 @@ public class StompController {
         if (request.getType().equals("start")) {
             ChatRoom chatRoom = chatRoomService.findChatRoom(request.getChatRoomId());
             if(chatRoom != null) {
-                template.convertAndSend("/sub/session/" + chatRoom.getRoomToken(), "start");
+                chatMessageService.save(chatRoom.getRoomToken(), MessageRequest.worden("채팅을 시작합니다.", chatRoom.getRoomToken(), "message"));
+                chatMessageService.save(chatRoom.getRoomToken(), MessageRequest.worden("산업 안전 보건법에 따라 고객응대 근로자 보호조치가 시행되고 있습니다.", chatRoom.getRoomToken(), "message"));
+                chatMessageService.save(chatRoom.getRoomToken(), MessageRequest.worden("서로간의 배려는 보다 따뜻한 세상을 만듭니다.", chatRoom.getRoomToken(), "message"));
+                template.convertAndSend("/sub/session/" + chatRoom.getId(), "start");
             }
-            else template.convertAndSend("/sub/session/" + chatRoom.getRoomToken(), "start Failed");
+            else template.convertAndSend("/sub/session/" + chatRoom.getId(), "start Failed");
         }
         else if (request.getType().equals("end")){
             ChatRoom chatRoom = chatRoomService.findChatRoom(request.getChatRoomId());
-            template.convertAndSend("/sub/session/" + chatRoom.getRoomToken(), "end");
+            chatMessageService.save(chatRoom.getRoomToken(), MessageRequest.worden("상담이 종료되었습니다.", chatRoom.getRoomToken(), "message"));
+            chatMessageService.save(chatRoom.getRoomToken(), MessageRequest.worden("상담내용은 보관되며 상담원 보호용 증거로 채택될 수 있습니다.", chatRoom.getRoomToken(), "message"));
+            chatMessageService.save(chatRoom.getRoomToken(), MessageRequest.worden("서로간의 배려는 보다 따뜻한 세상을 만듭니다.", chatRoom.getRoomToken(), "message"));
+            template.convertAndSend("/sub/session/" + chatRoom.getId(), "end");
             // 여기에 chat room 의 timePin으로 메세지 가져오고 분석 api 보낸 후 /sub/start에 'end' 보내기
             evaluationService.analyse(chatRoom);
         }

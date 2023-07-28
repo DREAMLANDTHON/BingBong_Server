@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MessageRequest {
     private Long senderId;
+    private String roomToken;
     private String type;
     private String message;
 }

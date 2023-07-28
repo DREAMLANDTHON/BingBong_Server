@@ -17,8 +17,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE ChatRoom SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = false")
+//@SQLDelete(sql = "UPDATE ChatRoom SET deleted = true WHERE id = ?")
+//@Where(clause = "deleted = false")
 public class ChatRoom {
 
     @Id

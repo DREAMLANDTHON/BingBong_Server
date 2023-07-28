@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Entity
 @Getter
 @Setter
@@ -36,9 +37,10 @@ public class ChatRoom {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime timePin;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn( name = "chat_message_id")
-    private List<ChatMessage> chatMessages;
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    @JoinColumn( name = "chat_message_id")
+//    private List<ChatMessage> chatMessages;
+
 
     private String roomToken;
 

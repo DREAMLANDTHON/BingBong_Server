@@ -28,4 +28,6 @@ public class consultReq {
 //    @JoinColumn(name="class_room_id")
     private ClassRoom classRoom;
     private String subject;
+    @Enumerated(value = EnumType.STRING)
+    private ApplyStatus status;
 }

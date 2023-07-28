@@ -3,6 +3,7 @@ package com.bingbong.consult.chatroom.application;
 import com.bingbong.consult.chatroom.domain.ChatRoom;
 import com.bingbong.consult.chatroom.domain.repo.ChatRoomRepo;
 import com.bingbong.consult.classroom.domain.ClassRoom;
+import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +31,9 @@ public class ChatRoomService {
 
     @Transactional
     public List<ChatRoom> findChatRoomByClassRoomId(Long id) {
-        ClassRoom classRoom = classRoomRepository.findById(id);
+        ClassRoom classRoom = classRoomRepository.findById(id).get();
         List<ChatRoom> ret = chatRoomRepo.findByClassRoomId(id);
         return ret;
     }
+
 }

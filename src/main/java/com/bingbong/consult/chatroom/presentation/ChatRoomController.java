@@ -17,16 +17,17 @@ public class ChatRoomController {
 
 
     @GetMapping("/chatRooms/{id}")
-    public ResponseEntity<ChatRoom> findChatRoom(@PathVariable Long id){
+    public ResponseEntity<ChatRoom> findChatRoom(@PathVariable Long id) {
         ChatRoom res = chatRoomService.findChatRoom(id);
         return ResponseEntity.ok(res);
     }
+
     @GetMapping("/chatRooms/classrooms/{id}")
-    public ResponseEntity<List<ChatRoom>> findChatRoomByClassRoomId(@PathVariable Long id){
+    public ResponseEntity<List<ChatRoom>> findChatRoomByClassRoomId(@PathVariable Long id) {
         List<ChatRoom> res = chatRoomService.findChatRoomByClassRoomId(id);
         return ResponseEntity.ok(res);
     }
-
-
-
 }
+
+
+

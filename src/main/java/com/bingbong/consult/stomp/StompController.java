@@ -1,6 +1,4 @@
 package com.bingbong.consult.stomp;
-
-
 import com.bingbong.consult.chatmessage.application.ChatMessageService;
 import com.bingbong.consult.chatmessage.domain.ChatMessage;
 import lombok.RequiredArgsConstructor;
@@ -52,18 +50,5 @@ public class StompController {
 
         }
 //        chatMessageService.save(ChatMessage.from(message, roomToken));
-        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+//        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
-
-//    // RoomId -> Message 전부 가져오는 API
-//    @GetMapping(value="/chat/message/{roomId}")
-//    public ResponseEntity<List<ChatMessage>> findAllByRoomId(@PathVariable String roomId){
-//        List<ChatMessage> response = chatMessageService.findChatMessageByRoomId(roomId);
-//        return ResponseEntity.ok(response);
-//    }
-
-
-
-
-
-}

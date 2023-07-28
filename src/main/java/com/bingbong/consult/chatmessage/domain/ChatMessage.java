@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE ChatMessage SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = false")
+//@SQLDelete(sql = "UPDATE ChatMessage SET deleted = true WHERE id = ?")
+//@Where(clause = "deleted = false")
 public class ChatMessage {
 
     @Id
@@ -27,11 +27,11 @@ public class ChatMessage {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinColumn(name="chat_room_id")
+    @JoinColumn(name="chat_room_id")
     private ChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinColumn(name="member_id")
+    @JoinColumn(name="member_id")
     private Member member;
 
     private String message;
@@ -42,7 +42,10 @@ public class ChatMessage {
 
     public static ChatMessage from(MessageRequest request, ChatRoom chatRoom, Member member) {
         return ChatMessage.builder()
-
+                .chatRoom(chatRoom)
+                .member(member)
+                .message(request.getMessage())
+                .sendAt(LocalDateTime.now())
                 .build();
     }
 }

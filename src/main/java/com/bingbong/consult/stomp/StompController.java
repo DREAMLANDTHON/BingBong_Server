@@ -42,18 +42,18 @@ public class StompController {
 
 
 
-    @MessageMapping(value = "/apply/{classId}")
-    public void apply(@PathVariable Long classId, @RequestBody ApplyRequest request) {
+    @MessageMapping(value = "/apply")
+    public void apply(@RequestBody ApplyRequest request) {
         if (request.getType().equals("apply")) {
-            ChatRoom chatRoom = chatRoomService.findByMemberAndClassRoom(request.getMemberId(), classId );
+            ChatRoom chatRoom = chatRoomService.findByMemberAndClassRoom(request.getMemberId(), request.getClassId() );
             Apply ret = applyService.save(request, chatRoom);
-            if(ret != null) template.convertAndSend("/sub/apply/" + classId, ret.getId());
-            else template.convertAndSend("/sub/apply/" + classId, "Apply Failed");
+            if(ret != null) template.convertAndSend("/sub/apply/" + request.getClassId(), ret.getId());
+            else template.convertAndSend("/sub/apply/" + request.getClassId(), "Apply Failed");
         }
     }
 
-    @MessageMapping(value = "/start/{chatRoomId}")
-    public void start(@PathVariable Long chatRoomId, @RequestBody StartRequest request) {
+    @MessageMapping(value = "/start")
+    public void start(@RequestBody StartRequest request) {
         if (request.getType().equals("start")) {
             ChatRoom chatRoom = chatRoomService.findChatRoom(request.getChatRoomId());
             if(chatRoom != null) template.convertAndSend("/sub/start/" + chatRoom.getRoomToken(), "start");
@@ -61,12 +61,15 @@ public class StompController {
         }
     }
 
-    @MessageMapping(value = "/chat/{roomToken}")
-    public void message(@PathVariable("roomToken") String roomToken, @RequestBody MessageRequest request) {
+    @MessageMapping(value = "/chat")
+    public void message(@RequestBody MessageRequest request) {
 //        System.out.println(request.getMessage());
+        System.out.println(request.getRoomToken());
+
         if (request.getType().equals("message")) {
-            chatMessageService.save(roomToken, request);
-            template.convertAndSend("/sub/chat/" + roomToken, request);
+//            System.out.println(roomToken + "sdadasd");
+            chatMessageService.save(request.getRoomToken(), request);
+            template.convertAndSend("/sub/chat/" + request.getRoomToken(), request);
         }
     }
 }

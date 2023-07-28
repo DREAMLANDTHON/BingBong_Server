@@ -10,6 +10,7 @@ import com.bingbong.consult.member.domain.repository.MemberRepository;
 import com.bingbong.consult.member.presentation.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -18,6 +19,11 @@ import java.util.Optional;
 public class ClassRoomService {
     private final ClassRoomRepository classRoomRepository;
     private final MemberRepository memberRepository;
+
+    @Transactional
+    public ClassRoom findById(Long classId) {
+        return classRoomRepository.findById(classId).get();
+    }
 
     public Long create(ClassRoomRequest form) {
         if(duplicateClassRoomCheck(form.getGroupCode())) {

@@ -19,7 +19,7 @@ import java.util.List;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, name="member_id")
+    @Column(nullable = false)
     private Long id;
     private String name;
     private String email;

@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ClassRoomResponse {
+    Long id;
     String classRoomName;
     String description;
     Integer year;

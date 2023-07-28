@@ -20,6 +20,7 @@ public class ClassRoomMemberController {
     public ResponseEntity<Long> createClassRoomMember(@RequestBody JoinClassRequest form) {
         try{
             Long savedId = classRoomMemberService.joinClass(form.getCode(), form.getMemberId());
+
             return ResponseEntity.ok(savedId);
         }
         catch (Exception e) {

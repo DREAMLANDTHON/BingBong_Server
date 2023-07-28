@@ -1,5 +1,7 @@
 package com.bingbong.consult.classroomMember.application;
 
+import com.bingbong.consult.chatroom.domain.ChatRoom;
+import com.bingbong.consult.chatroom.domain.repo.ChatRoomRepo;
 import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
@@ -23,6 +25,7 @@ public class ClassRoomMemberService {
     private final ClassRoomMemberRepository classRoomMemberRepository;
     private final ClassRoomRepository classRoomRepository;
     private final MemberRepository memberRepository;
+    private final ChatRoomRepo chatRoomRepo;
 
     public Long joinClass(String code, Long memberId) {
         Optional<ClassRoom> classByGroupCode = classRoomRepository.findByGroupCode(code);
@@ -33,7 +36,12 @@ public class ClassRoomMemberService {
             classRoomMemberRepository.save(classRoomMember);
 
             Optional<ClassRoomMember> saved = classRoomMemberRepository.findById(classRoomMember.getId());
-            if(saved.isPresent()) return saved.get().getId();
+            if(saved.isPresent()){
+                ClassRoom classroom = saved.get().getClassRoom();
+                Member parent = saved.get().getMember();
+                chatRoomRepo.save(ChatRoom.from(classroom, parent));
+                return saved.get().getId();
+            }
             else throw new RuntimeException("저장 실패");
         }
         else throw new RuntimeException("저장 실패 - 존재하지 않는 그룹코드 또는 멤버");

@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class GoogleCloudTextAnalysis {
 
-    public void analyze(String text) throws IOException {
+    public static void analyze(String text) throws IOException {
         // Instantiates a client
         try (LanguageServiceClient language = LanguageServiceClient.create()) {
 

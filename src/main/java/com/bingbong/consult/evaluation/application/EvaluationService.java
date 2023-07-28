@@ -26,7 +26,7 @@ public class EvaluationService {
                 .insult(analytics.get("Insult"))
                 .profanity(analytics.get("Profanity"))
                 .derogatory(analytics.get("Derogatory"))
-                .violent(analytics.get("Violent") + analytics.get("Sexual"))
+                .violent((float) ((analytics.get("Violent") + analytics.get("Sexual"))/2.0))
                 .parent(parent)
                 .build();
         evaluationRepository.save(evaluation);

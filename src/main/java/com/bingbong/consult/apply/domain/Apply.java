@@ -30,7 +30,7 @@ public class Apply {
 ////    @JoinColumn(name="class_room_id")
 //    private ClassRoom classRoom;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private ChatRoom chatRoom;
 
     private String subject;

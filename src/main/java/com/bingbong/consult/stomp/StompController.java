@@ -7,6 +7,7 @@ import com.bingbong.consult.chatroom.application.ChatRoomService;
 import com.bingbong.consult.chatroom.domain.ChatRoom;
 import com.bingbong.consult.classroom.application.ClassRoomService;
 import com.bingbong.consult.classroom.domain.ClassRoom;
+import com.bingbong.consult.evaluation.application.EvaluationService;
 import com.bingbong.consult.member.application.MemberService;
 import com.bingbong.consult.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -40,34 +41,44 @@ public class StompController {
     @Autowired
     private ClassRoomService classRoomService;
 
+    @Autowired
+    private EvaluationService evaluationService;
+
 
 
     @MessageMapping(value = "/apply")
     public void apply(@RequestBody ApplyRequest request) {
         if (request.getType().equals("apply")) {
-            ChatRoom chatRoom = chatRoomService.findByMemberAndClassRoom(request.getMemberId(), request.getClassId() );
+            ChatRoom chatRoom = chatRoomService.findMemberAndClassRoom(request);
+            System.out.println(chatRoom);
             Apply ret = applyService.save(request, chatRoom);
             if(ret != null) template.convertAndSend("/sub/apply/" + request.getClassId(), ret.getId());
             else template.convertAndSend("/sub/apply/" + request.getClassId(), "Apply Failed");
         }
     }
 
-    @MessageMapping(value = "/start")
+    @MessageMapping(value = "/session")
+
     public void start(@RequestBody StartRequest request) {
         if (request.getType().equals("start")) {
             ChatRoom chatRoom = chatRoomService.findChatRoom(request.getChatRoomId());
-            if(chatRoom != null) template.convertAndSend("/sub/start/" + chatRoom.getRoomToken(), "start");
-            else template.convertAndSend("/sub/start/" + chatRoom.getRoomToken(), "start Failed");
+            if(chatRoom != null) {
+                template.convertAndSend("/sub/session/" + chatRoom.getRoomToken(), "start");
+            }
+            else template.convertAndSend("/sub/session/" + chatRoom.getRoomToken(), "start Failed");
+        }
+        else if (request.getType().equals("end")){
+            ChatRoom chatRoom = chatRoomService.findChatRoom(request.getChatRoomId());
+            template.convertAndSend("/sub/session/" + chatRoom.getRoomToken(), "end");
+            // 여기에 chat room 의 timePin으로 메세지 가져오고 분석 api 보낸 후 /sub/start에 'end' 보내기
+            evaluationService.analyse(chatRoom);
         }
     }
 
     @MessageMapping(value = "/chat")
     public void message(@RequestBody MessageRequest request) {
-//        System.out.println(request.getMessage());
         System.out.println(request.getRoomToken());
-
         if (request.getType().equals("message")) {
-//            System.out.println(roomToken + "sdadasd");
             chatMessageService.save(request.getRoomToken(), request);
             template.convertAndSend("/sub/chat/" + request.getRoomToken(), request);
         }

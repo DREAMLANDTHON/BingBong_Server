@@ -53,4 +53,7 @@ public class ChatRoom {
                 .build();
     }
 
+    public void update() {
+        this.timePin = LocalDateTime.now();
+    }
 }

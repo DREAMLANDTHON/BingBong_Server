@@ -44,10 +44,4 @@ public class ChatRoomService {
         return chatRoomRepo.findMemberAndClassRoom(request.getMemberId(), request.getClassId());
     }
 
-    @Transactional
-    public ChatRoom findChatRoomAndUpdate(Long id) {
-        ChatRoom ret = this.findById(id);
-        ret.update();
-        return ret;
-    }
 }

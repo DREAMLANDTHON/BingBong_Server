@@ -16,12 +16,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class consultReq {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name="member_id")
     private Member reqMem;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    @JoinColumn(name="class_room_id")
     private ClassRoom classRoom;
     private String subject;
 }

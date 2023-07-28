@@ -16,14 +16,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class ClassRoomMember {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "member_id")
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    @JoinColumn(name = "member_id")
     private Member member;
-    @ManyToOne
-    @JoinColumn(name = "class_room_id")
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    @JoinColumn(name = "class_room_id")
     private ClassRoom classRoom;
 
     public static ClassRoomMember from(Member member, ClassRoom classRoom) {

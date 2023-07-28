@@ -1,6 +1,7 @@
 package com.bingbong.consult.chatmessage.domain;
 
 import com.bingbong.consult.chatroom.domain.ChatRoom;
+import com.bingbong.consult.member.domain.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,10 +27,11 @@ public class ChatMessage {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    @JoinColumn(name="chat_room_id")
     private ChatRoom chatRoom;
 
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    private Member writer;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private Member member;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime sendAt;

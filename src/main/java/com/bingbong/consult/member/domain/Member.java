@@ -1,6 +1,7 @@
 package com.bingbong.consult.member.domain;
 
 import com.bingbong.consult.classroom.domain.ClassRoom;
+import com.bingbong.consult.classroomMember.domain.ClassRoomMember;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,14 +17,15 @@ import java.util.List;
 @AllArgsConstructor
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, name="member_id")
     private Long id;
     private String name;
     private String email;
     private String childName;
     private String kakaoKey;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "class_room_id")
-    private ClassRoom classRoom;
+
+//    @OneToMany(fetch = FetchType.LAZY)
+//    @JoinColumn( = "class_room_id")
+//    private List<ClassRoomMember> classRoomMember;
 }

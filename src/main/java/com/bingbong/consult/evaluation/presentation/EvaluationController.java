@@ -1,6 +1,7 @@
 package com.bingbong.consult.evaluation.presentation;
 
 import com.bingbong.consult.evaluation.application.EvaluationService;
+import com.bingbong.consult.evaluation.presentation.response.AnalyticsReportResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class EvaluationController {
     private final EvaluationService evaluationService;
 
-    @PostMapping("/evaluations/{id}")
-    public ResponseEntity<Long> createEvaluation(@PathVariable Long id) {
-        return ResponseEntity.ok(evaluationService.create(id));
+    @GetMapping("/evaluations/analytics/{id}")
+    public ResponseEntity<AnalyticsReportResponse> createEvaluation(@PathVariable Long id) {
+        return ResponseEntity.ok(evaluationService.getReport(id));
     }
 }

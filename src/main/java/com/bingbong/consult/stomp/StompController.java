@@ -58,7 +58,6 @@ public class StompController {
     }
 
     @MessageMapping(value = "/session")
-
     public void start(@RequestBody StartRequest request) {
         if (request.getType().equals("start")) {
             ChatRoom chatRoom = chatRoomService.findChatRoom(request.getChatRoomId());

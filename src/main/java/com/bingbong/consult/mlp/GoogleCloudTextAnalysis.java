@@ -16,7 +16,7 @@ import java.util.*;
 public class GoogleCloudTextAnalysis {
 
 
-    public Map<String, Float> analyze(String text) throws IOException {
+    public static Map<String, Float> analyze(String text) throws IOException {
         Map<String, Float> map = new HashMap<>();
         List<String> categories = Arrays.asList("Toxic", "Insult", "Profanity", "Derogatory", "Sexual", "Violent");
 

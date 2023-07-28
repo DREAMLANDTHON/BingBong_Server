@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
-    List<Evaluation> findAllByParent(Member member);
+//    List<Evaluation> findAllByParent(Member member);
 
-    void findByMemberId(Long id);
+//    void findByMemberId(Long id);
 }

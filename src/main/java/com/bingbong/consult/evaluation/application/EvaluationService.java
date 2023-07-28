@@ -33,7 +33,7 @@ public class EvaluationService {
                 .insult(analytics.get("Insult"))
                 .profanity(analytics.get("Profanity"))
                 .derogatory(analytics.get("Derogatory"))
-                .violent((float) ((analytics.get("Violent") + analytics.get("Sexual")) / 2.0))
+                .violent( analytics.get("Violent"))
                 .parent(parent)
                 .build();
         evaluationRepository.save(evaluation);
@@ -71,7 +71,7 @@ public class EvaluationService {
         return ret;
     }
 
-    public AnalyticsReportResponse getReport(Long id) {
-        evaluationRepository.findByMemberId(id);
-    }
+//    public AnalyticsReportResponse getReport(Long id) {
+//        evaluationRepository.findByMemberId(id);
+//    }
 }

@@ -37,6 +37,7 @@ public class MemberService {
         if(member.isPresent()) {
             Member m = member.get();
             return MemberDto.builder()
+                    .id(m.getId())
                     .name(m.getName())
                     .email(m.getEmail())
                     .childName(m.getChildName())
@@ -52,6 +53,7 @@ public class MemberService {
         Optional<Member> byKakaoKey = memberRepository.findByKakaoKey(key);
         if (byKakaoKey.isPresent()) {
             MemberDto memberResponse = MemberDto.builder()
+                    .id(byKakaoKey.get().getId())
                     .name(byKakaoKey.get().getName())
                     .email(byKakaoKey.get().getEmail())
                     .childName(byKakaoKey.get().getChildName())

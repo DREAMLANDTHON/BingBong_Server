@@ -49,6 +49,7 @@ public class ClassRoomService {
         if(findById.isPresent()){
             ClassRoom classRoom = findById.get();
             return ClassRoomResponse.builder()
+                    .id(classRoom.getId())
                     .classRoomName(classRoom.getClassRoomName())
                     .description(classRoom.getDescription())
                     .year(classRoom.getYear())

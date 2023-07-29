@@ -10,6 +10,7 @@ import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.evaluation.application.EvaluationService;
 import com.bingbong.consult.member.application.MemberService;
 import com.bingbong.consult.member.domain.Member;
+import com.bingbong.consult.mlp.GoogleCloudTextAnalysis;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -82,8 +84,14 @@ public class StompController {
 
     @MessageMapping(value = "/chat")
     public void message(@RequestBody MessageRequest request) {
-        System.out.println(request.getRoomToken());
+//        System.out.println(request.getRoomToken());
         if (request.getType().equals("message")) {
+            try {
+                Float profanity = GoogleCloudTextAnalysis.analyze(request.getMessage()).get("Profanity");
+                if(profanity >0.9f) request.setMessage("Worden이 부적절한 메세지를 숨김처리하였습니다.");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             chatMessageService.save(request.getRoomToken(), request);
             template.convertAndSend("/sub/chat/" + request.getRoomToken(), request);
         }

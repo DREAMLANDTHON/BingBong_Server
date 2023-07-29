@@ -62,7 +62,7 @@ public class EvaluationService {
             Member teacher = messages.get().get(0).getChatRoom().getClassRoom().getTeacher();
             for(int i=0; i<messages.get().size();i++){
                 temp = messages.get().get(i);
-                if(temp.getMember().getId() != teacher.getId()){
+                if(temp.getMember().getId() != teacher.getId() && temp.getMember().getId() != 77){
                     ret = ret + " " + temp.getMessage();
                 }
             }
@@ -92,11 +92,11 @@ public class EvaluationService {
             violent += evaluation.getViolent();
         }
         FiveCriteria average = FiveCriteria.builder()
-                .toxic(toxic)
-                .insult(insult)
-                .profanity(profanity)
-                .derogatory(derogatory)
-                .violent(violent)
+                .toxic(toxic/evaluations.size())
+                .insult(insult/evaluations.size())
+                .profanity(profanity/evaluations.size())
+                .derogatory(derogatory/evaluations.size())
+                .violent(violent/evaluations.size())
                 .build();
         return AnalyticsReportResponse.builder()
                 .recentReport(average)

@@ -48,7 +48,12 @@
 
 ---
 
-(플로우 영상 추가예정)
+<img width="1278" alt="스크린샷 2023-07-30 오후 1 37 55" src="https://github.com/DREAMLANDTHON/BingBong_Client/assets/109461985/eb0d0cd8-3831-434a-97ab-905dc6a50ebb">
+<img width="1278" alt="스크린샷 2023-07-30 오후 1 39 07" src="https://github.com/DREAMLANDTHON/BingBong_Client/assets/109461985/36d67cfc-90d9-459b-93f9-0d2d56c4cd96">
+<img width="1278" alt="스크린샷 2023-07-30 오후 1 39 17" src="https://github.com/DREAMLANDTHON/BingBong_Client/assets/109461985/ad0cd513-0929-46d6-9a1a-17c31749f548">
+<img width="1278" alt="스크린샷 2023-07-30 오후 1 39 38" src="https://github.com/DREAMLANDTHON/BingBong_Client/assets/109461985/191e1393-7953-4059-a3a8-89c573b5f7c9">
+<img width="1278" alt="스크린샷 2023-07-30 오후 1 39 56" src="https://github.com/DREAMLANDTHON/BingBong_Client/assets/109461985/ad3f6403-9c5f-4cac-9a79-3c88c1fbe1c8">
+
 
 --- 
 

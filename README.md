@@ -57,7 +57,7 @@
 
 --- 
 
-### Data Structure
+### ERD
 <img width="779" alt="스크린샷 2023-07-29 오후 2 02 50" src="https://github.com/DREAMLANDTHON/BingBong_Client/assets/109461985/a9531714-081a-4377-8b7c-7089cee344df">
 
 ---

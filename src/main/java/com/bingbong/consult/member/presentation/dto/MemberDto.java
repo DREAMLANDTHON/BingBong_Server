@@ -6,10 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class MemberDto {
-    Long id;
     String name;
     String email;
     String childName;
-    String kakaoKey;
     String role; // PARENT, TEACHER
 }

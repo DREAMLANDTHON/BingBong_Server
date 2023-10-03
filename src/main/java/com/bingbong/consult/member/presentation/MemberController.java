@@ -4,6 +4,7 @@ import com.bingbong.consult.member.application.MemberService;
 import com.bingbong.consult.member.presentation.dto.MemberDto;
 import com.bingbong.consult.member.presentation.dto.MemberKeyDto;
 import com.bingbong.consult.security.TokenDto;
+import com.bingbong.consult.security.TokenProvider;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "Bearer Authentication")
 public class MemberController {
     private final MemberService memberService;
+    private final TokenProvider tokenProvider;
     @PostMapping("/members/login")
     public ResponseEntity<TokenDto> registerMember(@RequestBody MemberDto form) {
         String jwt = memberService.register(form);
@@ -38,7 +40,7 @@ public class MemberController {
     private HttpHeaders responseHeader(String jwt) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Bearer", "" + jwt);
-//        httpHeaders.add("Level", tokenProvider.getAuthentication(jwt).authorities.joinToString { it.authority });
+        httpHeaders.add("Role", tokenProvider.getAuthentication(jwt).getAuthorities().toString());
         return httpHeaders;
     }
 }

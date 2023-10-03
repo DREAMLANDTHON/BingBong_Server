@@ -26,6 +26,7 @@ public class ClassRoom {
     private String classRoomName;
     private String description;
     private String groupCode;
+    @Column(name = "classroom_year")
     private Integer year;
 
     @ManyToOne(fetch = FetchType.LAZY)

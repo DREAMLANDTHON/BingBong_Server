@@ -11,6 +11,7 @@ import com.bingbong.consult.evaluation.application.EvaluationService;
 import com.bingbong.consult.member.application.MemberService;
 import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.mlp.GoogleCloudTextAnalysis;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 public class StompController {
 
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달

@@ -60,15 +60,17 @@ public class EvaluationService {
         ChatMessage temp;
         if(messages.isPresent()){
             Member teacher = messages.get().get(0).getChatRoom().getClassRoom().getTeacher();
+            Member forSave=null;
             for(int i=0; i<messages.get().size();i++){
                 temp = messages.get().get(i);
                 if(temp.getMember().getId() != teacher.getId() && temp.getMember().getId() != 77){
                     ret = ret + " " + temp.getMessage();
+                    forSave= temp.getMember();
                 }
             }
             System.out.println(ret);
             try {
-                this.create(messages.get().get(0).getMember().getId(), GoogleCloudTextAnalysis.analyze(ret) );
+                this.create(forSave.getId(), GoogleCloudTextAnalysis.analyze(ret) );
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

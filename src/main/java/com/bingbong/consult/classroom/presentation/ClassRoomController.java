@@ -3,6 +3,7 @@ package com.bingbong.consult.classroom.presentation;
 import com.bingbong.consult.classroom.application.ClassRoomService;
 import com.bingbong.consult.classroom.presentation.request.ClassRoomRequest;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ClassRoomController {
     private final ClassRoomService classRoomService;
 

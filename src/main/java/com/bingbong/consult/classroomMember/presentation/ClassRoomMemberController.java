@@ -4,6 +4,7 @@ import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
 import com.bingbong.consult.classroomMember.application.ClassRoomMemberService;
 import com.bingbong.consult.classroomMember.presentation.request.JoinClassRequest;
 import com.bingbong.consult.member.presentation.dto.MemberDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ClassRoomMemberController {
     private final ClassRoomMemberService classRoomMemberService;
 

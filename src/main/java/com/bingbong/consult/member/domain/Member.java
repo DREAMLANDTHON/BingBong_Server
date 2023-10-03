@@ -24,7 +24,6 @@ public class Member {
     private String name;
     private String email;
     private String childName;
-    private String kakaoKey;
     private String role;
 
 //    @OneToMany(fetch = FetchType.LAZY)

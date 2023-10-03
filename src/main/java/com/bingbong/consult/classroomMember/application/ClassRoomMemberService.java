@@ -73,7 +73,7 @@ public class ClassRoomMemberService {
                             .name(member.getName())
                             .email(member.getEmail())
                             .childName(member.getChildName())
-                            .kakaoKey(member.getKakaoKey())
+                            .role(member.getRole())
                             .build());
         }
         return members;

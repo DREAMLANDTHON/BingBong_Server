@@ -27,7 +27,6 @@ public class MemberService {
                     .name(form.getName())
                     .email(form.getEmail())
                     .childName(form.getChildName())
-                    .kakaoKey(form.getKakaoKey())
                     .role(form.getRole())
                     .build();
             memberRepository.save(member);
@@ -53,7 +52,7 @@ public class MemberService {
                     .name(m.getName())
                     .email(m.getEmail())
                     .childName(m.getChildName())
-                    .kakaoKey(m.getKakaoKey())
+                    .role(m.getRole())
                     .build();
         }
         else{
@@ -61,24 +60,24 @@ public class MemberService {
         }
     }
 
-    public MemberKeyDto getMemberByKey(String key) {
-        Optional<Member> byKakaoKey = memberRepository.findByKakaoKey(key);
-        if (byKakaoKey.isPresent()) {
-            MemberDto memberResponse = MemberDto.builder()
-                    .id(byKakaoKey.get().getId())
-                    .name(byKakaoKey.get().getName())
-                    .email(byKakaoKey.get().getEmail())
-                    .childName(byKakaoKey.get().getChildName())
-                    .kakaoKey(byKakaoKey.get().getKakaoKey())
-                    .build();
-            return MemberKeyDto.builder()
-                    .needRegister(false)
-                    .member(memberResponse)
-                    .build();
-        } else return MemberKeyDto.builder()
-                .needRegister(true)
-                .build();
-    }
+//    public MemberKeyDto getMemberByKey(String key) {
+//        Optional<Member> byKakaoKey = memberRepository.findByKakaoKey(key);
+//        if (byKakaoKey.isPresent()) {
+//            MemberDto memberResponse = MemberDto.builder()
+//                    .id(byKakaoKey.get().getId())
+//                    .name(byKakaoKey.get().getName())
+//                    .email(byKakaoKey.get().getEmail())
+//                    .childName(byKakaoKey.get().getChildName())
+//                    .role(byKakaoKey.get().getRole())
+//                    .build();
+//            return MemberKeyDto.builder()
+//                    .needRegister(false)
+//                    .member(memberResponse)
+//                    .build();
+//        } else return MemberKeyDto.builder()
+//                .needRegister(true)
+//                .build();
+//    }
 
     @Transactional(readOnly = true)
     public Member findById(Long memberId) {

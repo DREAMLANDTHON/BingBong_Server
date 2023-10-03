@@ -29,10 +29,11 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMember(id));
     }
 
-    @GetMapping("/members/key/{key}")
-    public ResponseEntity<MemberKeyDto> getMemberKey(@PathVariable String key) {
-        return ResponseEntity.ok(memberService.getMemberByKey(key));
-    }
+//    @GetMapping("/members/key/{key}")
+//    @Deprecated
+//    public ResponseEntity<MemberKeyDto> getMemberKey(@PathVariable String key) {
+//        return ResponseEntity.ok(memberService.getMemberByKey(key));
+//    }
 
     private HttpHeaders responseHeader(String jwt) {
         HttpHeaders httpHeaders = new HttpHeaders();

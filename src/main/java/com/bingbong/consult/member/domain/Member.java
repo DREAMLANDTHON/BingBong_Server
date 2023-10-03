@@ -25,6 +25,7 @@ public class Member {
     private String email;
     private String childName;
     private String kakaoKey;
+    private String role;
 
 //    @OneToMany(fetch = FetchType.LAZY)
 //    @JoinColumn( = "class_room_id")

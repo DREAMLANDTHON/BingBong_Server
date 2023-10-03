@@ -11,4 +11,5 @@ public class MemberDto {
     String email;
     String childName;
     String kakaoKey;
+    String role; // PARENT, TEACHER
 }

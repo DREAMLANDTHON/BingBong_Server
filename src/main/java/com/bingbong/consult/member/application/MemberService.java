@@ -4,7 +4,10 @@ import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
 import com.bingbong.consult.member.presentation.dto.MemberDto;
 import com.bingbong.consult.member.presentation.dto.MemberKeyDto;
+import com.bingbong.consult.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,22 +18,31 @@ import java.util.Optional;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
-    public Long register(MemberDto form) {
-        Member member = Member.builder()
-                .name(form.getName())
-                .email(form.getEmail())
-                .childName(form.getChildName())
-                .kakaoKey(form.getKakaoKey())
-                .build();
-        memberRepository.save(member);
-        Optional<Member> savedMember = memberRepository.findById(member.getId());
-        if(savedMember.isPresent()) {
-            return savedMember.get().getId();
+    private final TokenProvider tokenProvider;
+    public String register(MemberDto form) {
+        Optional<Member> memberByEmail = memberRepository.findByEmail(form.getEmail());
+        if(!memberByEmail.isPresent()) {
+            // 회원가입
+            Member member = Member.builder()
+                    .name(form.getName())
+                    .email(form.getEmail())
+                    .childName(form.getChildName())
+                    .kakaoKey(form.getKakaoKey())
+                    .role(form.getRole())
+                    .build();
+            memberRepository.save(member);
         }
-        else{
-            throw new RuntimeException("회원 가입 실패");
-        }
+
+        String token = createToken(form);
+        return token;
     }
+
+    private String createToken(MemberDto form) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(form.getName(), form.getEmail());
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        return tokenProvider.createToken(authenticationToken, form.getRole());
+    }
+
 
     public MemberDto getMember(Long id) {
         Optional<Member> member = memberRepository.findById(id);

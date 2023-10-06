@@ -8,4 +8,5 @@ import lombok.Data;
 @Builder
 public class TokenDto {
     String token;
+    String role;
 }

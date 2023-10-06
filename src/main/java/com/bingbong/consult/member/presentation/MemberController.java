@@ -23,7 +23,11 @@ public class MemberController {
     @PostMapping("/members/login")
     public ResponseEntity<TokenDto> registerMember(@RequestBody MemberDto form) {
         String jwt = memberService.register(form);
-        return new ResponseEntity(responseHeader(jwt), HttpStatus.CREATED);
+        TokenDto tokenDto = TokenDto.builder()
+                .token(jwt)
+                .role(form.getRole())
+                .build();
+        return new ResponseEntity(tokenDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/members/{id}")

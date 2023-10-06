@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -18,12 +20,8 @@ public class ClassRoomController {
 
     @PostMapping("/classRooms")
     public ResponseEntity<Long> createClassRoom(@RequestBody ClassRoomRequest form) {
-        try{
-            Long createdClassId = classRoomService.create(form);
-            return ResponseEntity.ok(createdClassId);
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Long createdClassId = classRoomService.create(form);
+        return ResponseEntity.ok(createdClassId);
     }
 
     @GetMapping("/classRooms/{id}")
@@ -35,5 +33,13 @@ public class ClassRoomController {
         catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("/classRooms/teacher/{teacherId}")
+    public ResponseEntity<List<ClassRoomResponse>> findClassRoomByTeacherId(
+            @PathVariable Long teacherId
+    ) {
+        List<ClassRoomResponse> classRoomResponse = classRoomService.findClassRoomByTeacherId(teacherId);
+        return ResponseEntity.ok(classRoomResponse);
     }
 }

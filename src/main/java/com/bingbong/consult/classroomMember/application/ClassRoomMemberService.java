@@ -55,6 +55,7 @@ public class ClassRoomMemberService {
             ClassRoom classRoom = classRoomMember.getClassRoom();
             Member teacher = classRoom.getTeacher();
             classRooms.add(ClassRoomResponse.builder()
+                            .id(classRoom.getId())
                             .classRoomName(classRoom.getClassRoomName())
                             .description(classRoom.getDescription())
                             .year(classRoom.getYear())

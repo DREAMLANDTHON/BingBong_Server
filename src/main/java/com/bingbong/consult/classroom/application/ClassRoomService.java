@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +66,18 @@ public class ClassRoomService {
         }
         else throw new RuntimeException("존재하지 않는 반입니다.");
 
+    }
+
+    public List<ClassRoomResponse> findClassRoomByTeacherId(Long teacherId) {
+        Optional<Member> teacher = memberRepository.findById(teacherId);
+        teacher.orElseThrow(() -> new RuntimeException("존재하지 않는 선생님입니다."));
+        List<ClassRoom> allByTeacher = classRoomRepository.findAllByTeacher(teacher.get());
+        return allByTeacher.stream().map(classRoom -> ClassRoomResponse.builder()
+                .id(classRoom.getId())
+                .classRoomName(classRoom.getClassRoomName())
+                .description(classRoom.getDescription())
+                .year(classRoom.getYear())
+                .teacher(classRoom.getTeacher().getName())
+                .build()).collect(Collectors.toList());
     }
 }

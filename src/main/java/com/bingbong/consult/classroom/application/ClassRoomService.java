@@ -4,6 +4,7 @@ import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
 import com.bingbong.consult.classroom.presentation.request.ClassRoomRequest;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
+import com.bingbong.consult.classroomMember.domain.repository.ClassRoomMemberRepository;
 import com.bingbong.consult.member.application.MemberService;
 import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class ClassRoomService {
     private final ClassRoomRepository classRoomRepository;
     private final MemberRepository memberRepository;
+    private final ClassRoomMemberRepository classRoomMemberRepository;
 
     @Transactional
     public ClassRoom findById(Long classId) {
@@ -95,6 +97,25 @@ public class ClassRoomService {
                 .teacher(classRoom.getTeacher().getName())
                 .groupCode(classRoom.getGroupCode())
                 .build()).collect(Collectors.toList());
+    }
+
+    public List<ClassRoomResponse> findClassRoomByParentId(Long parentId) {
+        Optional<Member> parent = memberRepository.findById(parentId);
+        parent.orElseThrow(() -> new RuntimeException("존재하지 않는 학부모입니다."));
+        return classRoomMemberRepository.findAllByMember(parent.get())
+                .stream().map(classRoomMember -> {
+                    ClassRoom classRoom = classRoomMember.getClassRoom();
+                    return ClassRoomResponse.builder()
+                            .id(classRoom.getId())
+                            .classRoomName(classRoom.getClassRoomName())
+                            .description(classRoom.getDescription())
+                            .year(classRoom.getYear())
+                            .teacher(classRoom.getTeacher().getName())
+                            .groupCode(classRoom.getGroupCode())
+                            .build();
+
+                })
+                .collect(Collectors.toList());
     }
 
     public ClassRoomResponse findClassRoomByGroupCode(String groupCode) {

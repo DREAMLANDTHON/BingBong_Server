@@ -54,4 +54,12 @@ public class ClassRoomController {
         List<ClassRoomResponse> classRoomResponse = classRoomService.findClassRoomByTeacherId(teacherId);
         return ResponseEntity.ok(classRoomResponse);
     }
+
+    @GetMapping("/classRooms/parent/{parentId}")
+    public ResponseEntity<List<ClassRoomResponse>> findClassRoomByParentId(
+            @PathVariable Long parentId
+    ) {
+        List<ClassRoomResponse> classRoomResponse = classRoomService.findClassRoomByParentId(parentId);
+        return ResponseEntity.ok(classRoomResponse);
+    }
 }

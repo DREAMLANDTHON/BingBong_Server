@@ -13,21 +13,33 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @SecurityRequirement(name = "Bearer Authentication")
 public class ClassRoomController {
     private final ClassRoomService classRoomService;
 
     @PostMapping("/classRooms")
-    public ResponseEntity<Long> createClassRoom(@RequestBody ClassRoomRequest form) {
-        Long createdClassId = classRoomService.create(form);
-        return ResponseEntity.ok(createdClassId);
+    public ResponseEntity<String> createClassRoom(@RequestBody ClassRoomRequest form) {
+        return ResponseEntity.ok(classRoomService.create(form));
     }
 
     @GetMapping("/classRooms/{id}")
     public ResponseEntity<ClassRoomResponse> findClassRoom(@PathVariable Long id) {
         try{
             ClassRoomResponse classRoomResponse = classRoomService.findClassRoom(id);
+            return ResponseEntity.ok(classRoomResponse);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/classRooms/byGroupCode/{groupCode}")
+    public ResponseEntity<ClassRoomResponse> findClassRoomByGroupCode(
+            @PathVariable String groupCode
+    ) {
+        try{
+            ClassRoomResponse classRoomResponse = classRoomService.findClassRoomByGroupCode(groupCode);
             return ResponseEntity.ok(classRoomResponse);
         }
         catch (Exception e) {

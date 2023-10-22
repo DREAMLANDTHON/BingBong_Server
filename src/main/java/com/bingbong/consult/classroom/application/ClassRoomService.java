@@ -27,16 +27,30 @@ public class ClassRoomService {
         return classRoomRepository.findById(classId).get();
     }
 
-    public Long create(ClassRoomRequest form) {
-        if(duplicateClassRoomCheck(form.getGroupCode())) {
-            throw new RuntimeException("중복된 반 코드입니다.");
+    public String create(ClassRoomRequest form) {
+        String groupCode = form.getGroupCode();
+        if (groupCode == null) {
+            groupCode = ""; // null 대신 빈 문자열로 설정
         }
+        while(true) {
+            if (groupCode.isEmpty()) {
+                String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                for (int i = 0; i < 10; i++) {
+                    double randomIndex = Math.floor(Math.random() * characters.length());
+                    groupCode += characters.charAt((int) randomIndex);
+                }
+            }
+            else if(!duplicateClassRoomCheck(groupCode)) {
+                break;
+            }
+        }
+
         Member teacher = memberRepository.findById(form.getTeacherId()).orElseThrow(() -> new RuntimeException("존재하지 않는 선생님입니다."));
 
         ClassRoom classRoom = ClassRoom.builder()
                 .classRoomName(form.getClassRoomName())
                 .description(form.getDescription())
-                .groupCode(form.getGroupCode())
+                .groupCode(groupCode)
                 .year(form.getYear())
                 .teacher(teacher)
                 .build();
@@ -44,7 +58,7 @@ public class ClassRoomService {
         Optional<ClassRoom> foundClassRoom = classRoomRepository.findById(classRoom.getId());
         foundClassRoom.orElseThrow(() -> new RuntimeException("반 생성 실패"));
 
-        return foundClassRoom.get().getId();
+        return foundClassRoom.get().getGroupCode();
     }
 
     private Boolean duplicateClassRoomCheck(String groupCode) {
@@ -61,6 +75,7 @@ public class ClassRoomService {
                     .classRoomName(classRoom.getClassRoomName())
                     .description(classRoom.getDescription())
                     .year(classRoom.getYear())
+                    .groupCode(classRoom.getGroupCode())
                     .teacher(classRoom.getTeacher().getName())
                     .build();
         }
@@ -78,6 +93,20 @@ public class ClassRoomService {
                 .description(classRoom.getDescription())
                 .year(classRoom.getYear())
                 .teacher(classRoom.getTeacher().getName())
+                .groupCode(classRoom.getGroupCode())
                 .build()).collect(Collectors.toList());
+    }
+
+    public ClassRoomResponse findClassRoomByGroupCode(String groupCode) {
+        Optional<ClassRoom> byGroupCode = classRoomRepository.findByGroupCode(groupCode);
+        byGroupCode.orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
+        return ClassRoomResponse.builder()
+                .id(byGroupCode.get().getId())
+                .classRoomName(byGroupCode.get().getClassRoomName())
+                .description(byGroupCode.get().getDescription())
+                .year(byGroupCode.get().getYear())
+                .teacher(byGroupCode.get().getTeacher().getName())
+                .groupCode(byGroupCode.get().getGroupCode())
+                .build();
     }
 }

@@ -9,4 +9,5 @@ import lombok.Data;
 public class TokenDto {
     String token;
     String role;
+    Long memberId;
 }

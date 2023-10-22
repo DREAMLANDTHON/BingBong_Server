@@ -1,6 +1,8 @@
 package com.bingbong.consult.classroomMember.domain.repository;
 
+import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.classroomMember.domain.ClassRoomMember;
+import com.bingbong.consult.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +13,6 @@ import java.util.Optional;
 public interface ClassRoomMemberRepository extends JpaRepository<ClassRoomMember, Long> {
     List<ClassRoomMember> findByMemberId(Long memberId);
     List<ClassRoomMember> findByClassRoomId(Long classId);
+    ClassRoomMember findByMemberAndClassRoom(Member member, ClassRoom classRoom);
+    List<ClassRoomMember> findAllByMember(Member member);
 }

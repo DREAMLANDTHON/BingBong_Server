@@ -12,4 +12,5 @@ public class ClassRoomResponse {
     String description;
     Integer year;
     String teacher;
+    String groupCode;
 }

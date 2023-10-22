@@ -32,6 +32,8 @@ public class ClassRoomMemberService {
         Optional<Member> memberById = memberRepository.findById(memberId);
 
         if(classByGroupCode.isPresent() && memberById.isPresent()){
+            ClassRoomMember duplicateJoin = classRoomMemberRepository.findByMemberAndClassRoom(memberById.get(), classByGroupCode.get());
+            if(duplicateJoin != null) throw new RuntimeException("이미 가입한 반입니다.");
             ClassRoomMember classRoomMember = ClassRoomMember.from(memberById.get(), classByGroupCode.get());
             classRoomMemberRepository.save(classRoomMember);
 

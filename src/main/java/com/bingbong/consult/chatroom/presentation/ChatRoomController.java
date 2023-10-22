@@ -2,6 +2,7 @@ package com.bingbong.consult.chatroom.presentation;
 
 import com.bingbong.consult.chatroom.application.ChatRoomService;
 import com.bingbong.consult.chatroom.domain.ChatRoom;
+import com.bingbong.consult.chatroom.presentation.response.ChatRoomResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,8 @@ public class ChatRoomController {
     }
 
     @GetMapping("/chatRooms/classrooms/{id}")
-    public ResponseEntity<List<ChatRoom>> findChatRoomByClassRoomId(@PathVariable Long id) {
-        List<ChatRoom> res = chatRoomService.findChatRoomByClassRoomId(id);
-        return ResponseEntity.ok(res);
+    public ResponseEntity<List<ChatRoomResponse>> findChatRoomByClassRoomId(@PathVariable Long id) {
+        return ResponseEntity.ok(chatRoomService.findChatRoomByClassRoomId(id));
     }
 }
 

@@ -8,8 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -36,6 +38,9 @@ public class Apply {
     private String subject;
     @Enumerated(value = EnumType.STRING)
     private ApplyStatus status;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
 
     public static Apply from(ApplyRequest request, ChatRoom chatRoom) {
         return Apply.builder()

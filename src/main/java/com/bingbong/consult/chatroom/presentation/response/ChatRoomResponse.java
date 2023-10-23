@@ -8,5 +8,5 @@ import lombok.Data;
 public class ChatRoomResponse {
     Long id;
     String parentName;
-    String recentMessage;
+    String subject;
 }

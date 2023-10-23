@@ -40,8 +40,10 @@ public class ClassRoomMemberService {
             Optional<ClassRoomMember> saved = classRoomMemberRepository.findById(classRoomMember.getId());
             if(saved.isPresent()){
                 ClassRoom classroom = saved.get().getClassRoom();
-                Member parent = saved.get().getMember();
-                chatRoomRepo.save(ChatRoom.from(classroom, parent));
+                if(saved.get().getMember().getRole() != "teacher") {
+                    Member parent = saved.get().getMember();
+                    chatRoomRepo.save(ChatRoom.from(classroom, parent));
+                }
                 return saved.get().getId();
             }
             else throw new RuntimeException("저장 실패");

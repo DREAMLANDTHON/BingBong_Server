@@ -54,6 +54,7 @@ public class MemberService {
         if(member.isPresent()) {
             Member m = member.get();
             return MemberDto.builder()
+                    .id(m.getId())
                     .name(m.getName())
                     .email(m.getEmail())
                     .childName(m.getChildName())

@@ -18,4 +18,5 @@ public interface ApplyRepo extends JpaRepository<Apply, Long> {
     List<Apply> findAllByClassroomOrderByTimepinDesc(ClassRoom classRoom);
 
     Optional<Apply> findFirstByChatRoomOrderByCreatedAtDesc(ChatRoom chatRoom);
+    List<Apply> findAllByChatRoomOrderByCreatedAtDesc(ChatRoom chatRoom);
 }

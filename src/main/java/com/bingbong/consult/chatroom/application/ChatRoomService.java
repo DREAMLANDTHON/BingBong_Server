@@ -7,11 +7,14 @@ import com.bingbong.consult.chatroom.domain.repo.ChatRoomRepo;
 import com.bingbong.consult.chatroom.presentation.response.ChatRoomResponse;
 import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
+import com.bingbong.consult.member.domain.Member;
+import com.bingbong.consult.member.domain.repository.MemberRepository;
 import com.bingbong.consult.stomp.ApplyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +30,8 @@ public class ChatRoomService {
 
     @Autowired
     private ApplyRepo applyRepo;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Transactional
     public ChatRoom findById(Long id){
@@ -59,4 +64,22 @@ public class ChatRoomService {
         return chatRoomRepo.findMemberAndClassRoom(request.getMemberId(), request.getClassId());
     }
 
+    public List<ChatRoomResponse> findChatRoomByClassRoomIdAndParent(Long classRoomId, String parentEmail) {
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+        classRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ClassRoom입니다."));
+
+        Optional<Member> parent = memberRepository.findByEmailAndRole(parentEmail, "parent");
+        parent.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Member입니다."));
+
+        Optional<ChatRoom> chatRoom = chatRoomRepo.findByClassRoomAndParent(classRoom.get(), parent.get());
+        chatRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ChatRoom입니다."));
+
+        List<Apply> recentApplyInfo = applyRepo.findAllByChatRoomOrderByCreatedAtDesc(chatRoom.get());
+
+        return Arrays.asList(ChatRoomResponse.builder()
+                .id(chatRoom.get().getId())
+                .parentName(chatRoom.get().getParent().getName())
+                .subject(recentApplyInfo.get(0).getSubject())
+                .build());
+    }
 }

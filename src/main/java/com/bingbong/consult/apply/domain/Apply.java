@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -40,6 +41,7 @@ public class Apply {
     private ApplyStatus status;
 
     @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     public static Apply from(ApplyRequest request, ChatRoom chatRoom) {

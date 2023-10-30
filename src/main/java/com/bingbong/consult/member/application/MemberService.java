@@ -4,6 +4,7 @@ import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
 import com.bingbong.consult.member.presentation.dto.MemberDto;
 import com.bingbong.consult.member.presentation.dto.MemberKeyDto;
+import com.bingbong.consult.security.TokenDto;
 import com.bingbong.consult.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,9 +20,9 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
-    public String register(MemberDto form) {
-        Optional<Member> memberByEmail = memberRepository.findByEmail(form.getEmail());
-        if(!memberByEmail.isPresent()) {
+    public TokenDto register(MemberDto form) {
+        Optional<Member> memberByEmailAndRole = memberRepository.findByEmailAndRole(form.getEmail(), form.getRole());
+        if(!memberByEmailAndRole.isPresent()) {
             // 회원가입
             Member member = Member.builder()
                     .name(form.getName())
@@ -32,8 +33,13 @@ public class MemberService {
             memberRepository.save(member);
         }
 
+        Optional<Member> byEmailAndRole = memberRepository.findByEmailAndRole(form.getEmail(), form.getRole());
         String token = createToken(form);
-        return token;
+        return TokenDto.builder()
+                .token(token)
+                .memberId(byEmailAndRole.get().getId())
+                .role(form.getRole())
+                .build();
     }
 
     private String createToken(MemberDto form) {
@@ -48,6 +54,7 @@ public class MemberService {
         if(member.isPresent()) {
             Member m = member.get();
             return MemberDto.builder()
+                    .id(m.getId())
                     .name(m.getName())
                     .email(m.getEmail())
                     .childName(m.getChildName())

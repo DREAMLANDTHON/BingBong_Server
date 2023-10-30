@@ -1,15 +1,13 @@
 package com.bingbong.consult.classroom.domain;
 
-import com.bingbong.consult.classroomMember.domain.ClassRoomMember;
+import com.bingbong.consult.classroom.posts.Post;
 import com.bingbong.consult.member.domain.Member;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,5 +30,8 @@ public class ClassRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
     private Member teacher;
+
+    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Post> posts;
 
 }

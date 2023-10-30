@@ -1,6 +1,8 @@
 package com.bingbong.consult.classroom.presentation;
 
 import com.bingbong.consult.classroom.application.ClassRoomService;
+import com.bingbong.consult.classroom.posts.Post;
+import com.bingbong.consult.classroom.posts.repository.PostRepository;
 import com.bingbong.consult.classroom.presentation.request.ClassRoomRequest;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -13,15 +15,15 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @SecurityRequirement(name = "Bearer Authentication")
 public class ClassRoomController {
     private final ClassRoomService classRoomService;
+    private final PostRepository postRepository;
 
     @PostMapping("/classRooms")
-    public ResponseEntity<Long> createClassRoom(@RequestBody ClassRoomRequest form) {
-        Long createdClassId = classRoomService.create(form);
-        return ResponseEntity.ok(createdClassId);
+    public ResponseEntity<String> createClassRoom(@RequestBody ClassRoomRequest form) {
+        return ResponseEntity.ok(classRoomService.create(form));
     }
 
     @GetMapping("/classRooms/{id}")
@@ -35,11 +37,44 @@ public class ClassRoomController {
         }
     }
 
+    @GetMapping("/classRooms/byGroupCode/{groupCode}")
+    public ResponseEntity<ClassRoomResponse> findClassRoomByGroupCode(
+            @PathVariable String groupCode
+    ) {
+        try{
+            ClassRoomResponse classRoomResponse = classRoomService.findClassRoomByGroupCode(groupCode);
+            return ResponseEntity.ok(classRoomResponse);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping("/classRooms/teacher/{teacherId}")
     public ResponseEntity<List<ClassRoomResponse>> findClassRoomByTeacherId(
             @PathVariable Long teacherId
     ) {
         List<ClassRoomResponse> classRoomResponse = classRoomService.findClassRoomByTeacherId(teacherId);
         return ResponseEntity.ok(classRoomResponse);
+    }
+
+    @GetMapping("/classRooms/parent/{parentId}")
+    public ResponseEntity<List<ClassRoomResponse>> findClassRoomByParentId(
+            @PathVariable Long parentId
+    ) {
+        List<ClassRoomResponse> classRoomResponse = classRoomService.findClassRoomByParentId(parentId);
+        return ResponseEntity.ok(classRoomResponse);
+    }
+
+    @GetMapping("/{classRoomId}/posts")
+    public List<Post> getClassRoomPost(@PathVariable Long classRoomId){
+        List<Post> posts = postRepository.findAll();
+        return posts;
+    }
+
+//        classRoomId로 어디에 post 올릴지 결정하고 Post내용들 추가한다
+    @PostMapping("/{classRoomId}/addPosts")
+    public List<Post> addClassPost(@PathVariable Long classRoomId,@RequestBody Post post){
+        return classRoomService.addClassPost(classRoomId, post);
     }
 }

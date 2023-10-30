@@ -2,12 +2,13 @@ package com.bingbong.consult.classroom.application;
 
 import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
+import com.bingbong.consult.classroom.posts.Post;
+import com.bingbong.consult.classroom.posts.repository.PostRepository;
 import com.bingbong.consult.classroom.presentation.request.ClassRoomRequest;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
-import com.bingbong.consult.member.application.MemberService;
+import com.bingbong.consult.classroomMember.domain.repository.ClassRoomMemberRepository;
 import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
-import com.bingbong.consult.member.presentation.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,22 +22,38 @@ import java.util.stream.Collectors;
 public class ClassRoomService {
     private final ClassRoomRepository classRoomRepository;
     private final MemberRepository memberRepository;
+    private final ClassRoomMemberRepository classRoomMemberRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public ClassRoom findById(Long classId) {
         return classRoomRepository.findById(classId).get();
     }
 
-    public Long create(ClassRoomRequest form) {
-        if(duplicateClassRoomCheck(form.getGroupCode())) {
-            throw new RuntimeException("중복된 반 코드입니다.");
+    public String create(ClassRoomRequest form) {
+        String groupCode = form.getGroupCode();
+        if (groupCode == null) {
+            groupCode = ""; // null 대신 빈 문자열로 설정
         }
+        while(true) {
+            if (groupCode.isEmpty()) {
+                String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                for (int i = 0; i < 10; i++) {
+                    double randomIndex = Math.floor(Math.random() * characters.length());
+                    groupCode += characters.charAt((int) randomIndex);
+                }
+            }
+            else if(!duplicateClassRoomCheck(groupCode)) {
+                break;
+            }
+        }
+
         Member teacher = memberRepository.findById(form.getTeacherId()).orElseThrow(() -> new RuntimeException("존재하지 않는 선생님입니다."));
 
         ClassRoom classRoom = ClassRoom.builder()
                 .classRoomName(form.getClassRoomName())
                 .description(form.getDescription())
-                .groupCode(form.getGroupCode())
+                .groupCode(groupCode)
                 .year(form.getYear())
                 .teacher(teacher)
                 .build();
@@ -44,7 +61,7 @@ public class ClassRoomService {
         Optional<ClassRoom> foundClassRoom = classRoomRepository.findById(classRoom.getId());
         foundClassRoom.orElseThrow(() -> new RuntimeException("반 생성 실패"));
 
-        return foundClassRoom.get().getId();
+        return foundClassRoom.get().getGroupCode();
     }
 
     private Boolean duplicateClassRoomCheck(String groupCode) {
@@ -61,6 +78,7 @@ public class ClassRoomService {
                     .classRoomName(classRoom.getClassRoomName())
                     .description(classRoom.getDescription())
                     .year(classRoom.getYear())
+                    .groupCode(classRoom.getGroupCode())
                     .teacher(classRoom.getTeacher().getName())
                     .build();
         }
@@ -78,6 +96,54 @@ public class ClassRoomService {
                 .description(classRoom.getDescription())
                 .year(classRoom.getYear())
                 .teacher(classRoom.getTeacher().getName())
+                .groupCode(classRoom.getGroupCode())
                 .build()).collect(Collectors.toList());
+    }
+
+    public List<ClassRoomResponse> findClassRoomByParentId(Long parentId) {
+        Optional<Member> parent = memberRepository.findById(parentId);
+        parent.orElseThrow(() -> new RuntimeException("존재하지 않는 학부모입니다."));
+        return classRoomMemberRepository.findAllByMember(parent.get())
+                .stream().map(classRoomMember -> {
+                    ClassRoom classRoom = classRoomMember.getClassRoom();
+                    return ClassRoomResponse.builder()
+                            .id(classRoom.getId())
+                            .classRoomName(classRoom.getClassRoomName())
+                            .description(classRoom.getDescription())
+                            .year(classRoom.getYear())
+                            .teacher(classRoom.getTeacher().getName())
+                            .groupCode(classRoom.getGroupCode())
+                            .build();
+
+                })
+                .collect(Collectors.toList());
+    }
+
+    public ClassRoomResponse findClassRoomByGroupCode(String groupCode) {
+        Optional<ClassRoom> byGroupCode = classRoomRepository.findByGroupCode(groupCode);
+        byGroupCode.orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
+        return ClassRoomResponse.builder()
+                .id(byGroupCode.get().getId())
+                .classRoomName(byGroupCode.get().getClassRoomName())
+                .description(byGroupCode.get().getDescription())
+                .year(byGroupCode.get().getYear())
+                .teacher(byGroupCode.get().getTeacher().getName())
+                .groupCode(byGroupCode.get().getGroupCode())
+                .build();
+    }
+
+    public List<Post> getClassRoomPost(Long classRoomId) {
+        Optional<Post> post = postRepository.findById(classRoomId);
+        post.orElseThrow(()->new RuntimeException("해당 classRoomId에는 Post가 없습니다"));
+        List<Post> posts = postRepository.findAll();
+        return posts.stream().map(post1 -> Post.builder().
+                id(post1.getId()).
+                postTime(post1.getPostTime()).
+                title(post1.getTitle()).build()).collect(Collectors.toList());
+    }
+    public List<Post> addClassPost(Long classRoomId,Post post){
+        List<Post> posts =  getClassRoomPost(classRoomId);
+        posts.add(post);
+        return posts;
     }
 }

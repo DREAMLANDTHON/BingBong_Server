@@ -4,6 +4,7 @@ import com.bingbong.consult.classroom.application.ClassRoomService;
 import com.bingbong.consult.classroom.posts.Post;
 import com.bingbong.consult.classroom.posts.repository.PostRepository;
 import com.bingbong.consult.classroom.presentation.request.ClassRoomRequest;
+import com.bingbong.consult.classroom.presentation.request.PostRequest;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +75,7 @@ public class ClassRoomController {
 
 //        classRoomId로 어디에 post 올릴지 결정하고 Post내용들 추가한다
     @PostMapping("/{classRoomId}/addPosts")
-    public List<Post> addClassPost(@PathVariable Long classRoomId,@RequestBody Post post){
-        return classRoomService.addClassPost(classRoomId, post);
+    public ResponseEntity<Post> addClassPost(@PathVariable Long classRoomId,@RequestBody PostRequest post){
+        return ResponseEntity.ok(classRoomService.addClassPost(classRoomId, post));
     }
 }

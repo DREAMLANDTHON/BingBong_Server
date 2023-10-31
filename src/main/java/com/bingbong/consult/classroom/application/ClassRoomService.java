@@ -5,6 +5,7 @@ import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
 import com.bingbong.consult.classroom.posts.Post;
 import com.bingbong.consult.classroom.posts.repository.PostRepository;
 import com.bingbong.consult.classroom.presentation.request.ClassRoomRequest;
+import com.bingbong.consult.classroom.presentation.request.PostRequest;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
 import com.bingbong.consult.classroomMember.domain.repository.ClassRoomMemberRepository;
 import com.bingbong.consult.member.domain.Member;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -133,17 +135,24 @@ public class ClassRoomService {
     }
 
     public List<Post> getClassRoomPost(Long classRoomId) {
-        Optional<Post> post = postRepository.findById(classRoomId);
-        post.orElseThrow(()->new RuntimeException("해당 classRoomId에는 Post가 없습니다"));
         List<Post> posts = postRepository.findAll();
         return posts.stream().map(post1 -> Post.builder().
                 id(post1.getId()).
-                postTime(post1.getPostTime()).
-                title(post1.getTitle()).build()).collect(Collectors.toList());
+                title(post1.getTitle()).
+                content(post1.getContent()).
+                postTime(post1.getPostTime()).build()).collect(Collectors.toList());
     }
-    public List<Post> addClassPost(Long classRoomId,Post post){
-        List<Post> posts =  getClassRoomPost(classRoomId);
-        posts.add(post);
-        return posts;
+    @Transactional
+    public Post addClassPost(Long classRoomId, PostRequest postRequest) {
+        ClassRoom classRoom = classRoomRepository.findById(classRoomId)
+                .orElseThrow(() -> new IllegalArgumentException("ClassRoom not found with id: " + classRoomId));
+
+        return Post.builder()
+                .title(postRequest.getTitle())
+                .content(postRequest.getContent())
+                .classRoom(classRoom)
+                .build();
+
+
     }
 }

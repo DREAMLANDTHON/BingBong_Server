@@ -39,7 +39,7 @@ public class ApplyService {
     }
 
     @Transactional
-    public Long saveApply(ApplyRequest request){
+    public Apply saveApply(ApplyRequest request){
         Optional<ClassRoom> classRoom = classRoomRepository.findById(request.getClassId());
         classRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ClassRoom입니다."));
 
@@ -52,13 +52,13 @@ public class ApplyService {
 
 //        Optional<ChatRoom> chatRoom = chatRoomRepo.findById(request.getChatRoomId());
 //        if(!chatRoom.isPresent()) throw new IllegalArgumentException("존재하지 않는 ChatRoom입니다.");
-        return applyRepo.save(Apply.from(request, chatRoom.get())).getId();
+        return applyRepo.save(Apply.from(request, chatRoom.get()));
     }
 
     public List<ApplyDto> findApplyByClassRoomId(Long classRoomId) {
         Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
         if(!classRoom.isPresent()) throw new IllegalArgumentException("존재하지 않는 ClassRoom입니다.");
-        return applyRepo.findAllByClassroomOrderByTimepinDesc(classRoom.get())
+        return applyRepo.findAllByClassroomOrderByTimePinDesc(classRoom.get())
                 .stream().map(
                         apply -> ApplyDto.builder()
                                 .id(apply.getId())
@@ -68,6 +68,14 @@ public class ApplyService {
                                 .chatRoomId(apply.getChatRoom().getId())
                                 .build()
                 ).collect(Collectors.toList());
+    }
+
+    public boolean findApplyExist(ApplyRequest request) {
+        Optional<Apply> ret = applyRepo.findByRoomTokenAndMemberId(request.getRoomToken(), request.getMemberId());
+        if(ret.isPresent()) {
+            return true;
+        }
+        return false;
     }
 
     public List<ApplyDto> findApplyByClassRoomIdAsParent(Long classRoomId, String parentEmail) {

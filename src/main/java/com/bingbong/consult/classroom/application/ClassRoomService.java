@@ -134,6 +134,12 @@ public class ClassRoomService {
                 .build();
     }
 
+//    public List<ClassRoomResponse> findAllClassRoomMembers(Long classRoomId){
+//        Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+//        classRoom.orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다!!"));
+//        return
+//    }
+
     public List<Post> getClassRoomPost(Long classRoomId) {
         List<Post> posts = postRepository.findAll();
         return posts.stream().map(post1 -> Post.builder().
@@ -145,14 +151,15 @@ public class ClassRoomService {
     @Transactional
     public Post addClassPost(Long classRoomId, PostRequest postRequest) {
         ClassRoom classRoom = classRoomRepository.findById(classRoomId)
-                .orElseThrow(() -> new IllegalArgumentException("ClassRoom not found with id: " + classRoomId));
-
-        return Post.builder()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 classRoom입니다!!"));
+        Post post = Post.builder()
                 .title(postRequest.getTitle())
-                .content(postRequest.getContent())
+                .content(postRequest.getTitle())
+                .postTime(postRequest.toEntity().getPostTime())
                 .classRoom(classRoom)
                 .build();
 
+        return postRepository.save(post);
 
     }
 }

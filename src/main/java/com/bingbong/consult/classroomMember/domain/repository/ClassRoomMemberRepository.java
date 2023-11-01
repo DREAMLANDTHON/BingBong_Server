@@ -15,4 +15,5 @@ public interface ClassRoomMemberRepository extends JpaRepository<ClassRoomMember
     List<ClassRoomMember> findByClassRoomId(Long classId);
     ClassRoomMember findByMemberAndClassRoom(Member member, ClassRoom classRoom);
     List<ClassRoomMember> findAllByMember(Member member);
+    List<ClassRoomMember> findAllByClassRoomId(Long classId);
 }

@@ -32,7 +32,7 @@ public class ChatMessageService {
 
     @Transactional
     public ChatMessage save(MessageRequest request) {
-        Member member = memberRepository.findById(request.getSenderId()).get();
+        Member member = memberRepository.findById(1L).get();
         return chatMessageRepo.save(ChatMessage.from(request, member));
 
     }

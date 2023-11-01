@@ -51,26 +51,27 @@ public class EvaluationService {
 
     @Transactional
     public String analyse(ChatRoom chatRoom) {
+
         LocalDateTime start = chatRoom.getTimePin();
         chatRoomService.findChatRoom(chatRoom.getId()).update();
         LocalDateTime end = LocalDateTime.now();
-        Optional<List<ChatMessage>> messages = chatMessageRepo.findBySendAtGreaterThanEqualAndSendAtLessThanEqual(start, end);
+        Optional<List<ChatMessage>> messages = chatMessageRepo.findByRoomTokenAndMemberIdAndSendAtGreaterThanEqualAndSendAtLessThanEqual(chatRoom.getRoomToken(), chatRoom.getParent().getId(), start, end);
         System.out.println("messages = " + messages);
         String ret="";
         ChatMessage temp;
         if(messages.isPresent()){
-            Member teacher = messages.get().get(0).getChatRoom().getClassRoom().getTeacher();
-            Member forSave=null;
+//            Member teacher = messages.get().get(0).getChatRoom().getClassRoom().getTeacher();
+//            Member forSave=null;
             for(int i=0; i<messages.get().size();i++){
-                temp = messages.get().get(i);
-                if(temp.getMember().getId() != teacher.getId() && temp.getMember().getId() != 77){
-                    ret = ret + " " + temp.getMessage();
-                    forSave= temp.getMember();
-                }
+//                temp = messages.get().get(i);
+//                if(temp.getMemberId() != teacher.getId() && temp.getMemberId() != 77){
+                ret = ret + " " + messages.get().get(i).getMessage();
+//                    forSave= temp.getMember();
+//                }
             }
             System.out.println(ret);
             try {
-                this.create(forSave.getId(), GoogleCloudTextAnalysis.analyze(ret) );
+                this.create(chatRoom.getParent().getId(), GoogleCloudTextAnalysis.analyze(ret) );
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

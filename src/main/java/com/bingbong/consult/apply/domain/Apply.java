@@ -34,8 +34,8 @@ public class Apply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ChatRoom chatRoom;
-
     private String subject;
+
     @Enumerated(value = EnumType.STRING)
     private ApplyStatus status;
 

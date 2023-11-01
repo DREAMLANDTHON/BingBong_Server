@@ -8,6 +8,7 @@ import com.bingbong.consult.chatroom.presentation.response.ChatRoomResponse;
 import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
 import com.bingbong.consult.stomp.ApplyRequest;
+import com.bingbong.consult.stomp.StartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,9 +55,18 @@ public class ChatRoomService {
                 }).collect(Collectors.toList());
     }
 
-    @Transactional
-    public ChatRoom findMemberAndClassRoom(ApplyRequest request) {
-        return chatRoomRepo.findMemberAndClassRoom(request.getMemberId(), request.getClassId());
-    }
+//    @Transactional
+//    public ChatRoom findMemberAndClassRoom(ApplyRequest request) {
+//        return chatRoomRepo.findMemberAndClassRoom(request.getMemberId(), request.getClassId());
+//    }
 
+    @Transactional
+    public ChatRoom sessionUpdate(StartRequest request) {
+        Optional<ChatRoom> ret = chatRoomRepo.findByRoomToken(request.getRoomToken());
+        if(ret.isPresent()) {
+            ret.get().updateSession(request.getType());
+            return ret.get();
+        }
+        else return null;
+    }
 }

@@ -43,6 +43,7 @@ public class ChatRoom {
 //    @JoinColumn( name = "chat_message_id")
 //    private List<ChatMessage> chatMessages;
     private String roomToken;
+    private boolean session;
 
     public static ChatRoom from (ClassRoom classRoom, Member member){
         return ChatRoom.builder()
@@ -50,11 +51,18 @@ public class ChatRoom {
                 .parent(member)
                 .timePin(LocalDateTime.now())
                 .roomToken(UUID.randomUUID().toString())
+                .session(false)
                 .build();
+    }
+    public void updateSession(String type){
+        if(type.equals("start")) {
+            this.session = true;
+            this.timePin = LocalDateTime.now();
+        }
+        else this.session = false;
     }
 
     public void update() {
-
         this.timePin = LocalDateTime.now();
         System.out.println(this.timePin);
     }

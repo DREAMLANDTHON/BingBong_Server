@@ -29,7 +29,7 @@ public class ApplyController {
 
     @PostMapping("/applies")
     public ResponseEntity<Long> save(@RequestBody ApplyRequest request) {
-        return ResponseEntity.ok(applyService.saveApply(request));
+        return ResponseEntity.ok(applyService.saveApply(request).getId());
     }
 }
 

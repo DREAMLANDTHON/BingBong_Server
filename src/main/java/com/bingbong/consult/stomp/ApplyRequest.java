@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyRequest {
+    private String roomToken;
+    private String classRoomToken;
     private Long memberId;
-    private Long chatRoomId;
     private String subject;
-    private Long classId;
     private String type;
 }

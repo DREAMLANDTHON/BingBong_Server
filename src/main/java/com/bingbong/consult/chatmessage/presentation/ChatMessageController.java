@@ -20,9 +20,9 @@ public class ChatMessageController {
     @Autowired
     private ChatMessageService chatMessageService;
 
-    @GetMapping("/messages/{chatRoomId}")
-    public ResponseEntity<List<ChatMessage>> findByChatRoomId(@PathVariable Long chatRoomId){
-        List<ChatMessage> res = chatMessageService.findByChatRoomId(chatRoomId);
+    @GetMapping("/messages/{chatRoomToken}")
+    public ResponseEntity<List<ChatMessage>> findByRoomToken(@PathVariable String chatRoomToken){
+        List<ChatMessage> res = chatMessageService.findByRoomToken(chatRoomToken);
         return ResponseEntity.ok(res);
     }
 

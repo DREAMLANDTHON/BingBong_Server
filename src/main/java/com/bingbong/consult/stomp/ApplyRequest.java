@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyRequest {
+    private Long classId;
     private String roomToken;
     private String classRoomToken;
     private Long memberId;

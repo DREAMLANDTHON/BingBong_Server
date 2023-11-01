@@ -48,8 +48,8 @@ public class StompController {
         if (request.getType().equals("apply")) {
             if(applyService.findApplyExist(request)) template.convertAndSend("/sub/apply/" + request.getClassRoomToken(), "이전 민원요청이 대기중입니다.");
             else {
-                Apply ret = applyService.save(request);
-                if(ret != null) template.convertAndSend("/sub/apply/" + request.getClassRoomToken(), "요청이 저장되었습니다");
+//                Apply ret = applyService.save(request);
+//                if(ret != null) template.convertAndSend("/sub/apply/" + request.getClassRoomToken(), "요청이 저장되었습니다");
             }
         }
     }

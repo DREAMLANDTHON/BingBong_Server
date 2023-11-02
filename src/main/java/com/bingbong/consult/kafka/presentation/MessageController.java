@@ -44,12 +44,12 @@ public class MessageController {
 //            }
 //        }
         try {
-            Float profanity = GoogleCloudTextAnalysis.analyze("임의 메세지").get("Profanity");
-//                Float profanity = 0.0f;
-            if (profanity > 0.9f) {
-                request.setMessage("Worden이 부적절한 메세지를 숨김처리하였습니다.");
-                request.setType("warning");
-            }
+//            Float profanity = GoogleCloudTextAnalysis.analyze("임의 메세지").get("Profanity");
+////                Float profanity = 0.0f;
+//            if (profanity > 0.9f) {
+//                request.setMessage("Worden이 부적절한 메세지를 숨김처리하였습니다.");
+//                request.setType("warning");
+//            }
             ChatMessage message = chatMessageService.save(request);
             kafkaTemplate.send("test", message);
         } catch (Exception e) {

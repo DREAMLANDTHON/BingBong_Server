@@ -40,4 +40,9 @@ public class ClassRoomMemberController {
     public ResponseEntity<List<MemberDto>> findClassRoomMembers(@PathVariable Long parentId) {
         return ResponseEntity.ok(classRoomMemberService.findClassRoomMembers(parentId));
     }
+
+    @GetMapping("/classRoomMembers/{classRoomId}")
+    public ResponseEntity<List<MemberDto>> findClassRoomMembersByClassRoomId(@PathVariable Long classRoomId) {
+        return ResponseEntity.ok(classRoomMemberService.findClassRoomMembersByClassRoomId(classRoomId));
+    }
 }

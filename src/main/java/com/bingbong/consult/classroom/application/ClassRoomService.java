@@ -134,14 +134,12 @@ public class ClassRoomService {
                 .build();
     }
 
-//    public List<ClassRoomResponse> findAllClassRoomMembers(Long classRoomId){
-//        Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
-//        classRoom.orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다!!"));
-//        return
-//    }
 
     public List<Post> getClassRoomPost(Long classRoomId) {
-        List<Post> posts = postRepository.findAll();
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+        classRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 classRoom 입니다"));
+//        classRoom 가져와서 해당 classRoom의 post를 가져와야 한다
+        List<Post> posts = classRoom.get().getPosts();
         return posts.stream().map(post1 -> Post.builder().
                 id(post1.getId()).
                 title(post1.getTitle()).

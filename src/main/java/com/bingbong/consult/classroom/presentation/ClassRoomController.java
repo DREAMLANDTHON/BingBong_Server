@@ -68,9 +68,9 @@ public class ClassRoomController {
     }
 
     @GetMapping("/{classRoomId}/posts")
-    public List<Post> getClassRoomPost(@PathVariable Long classRoomId){
-        List<Post> posts = postRepository.findAll();
-        return posts;
+    public ResponseEntity<List<Post>> getClassRoomPost(@PathVariable Long classRoomId){
+        List<Post> posts = classRoomService.getClassRoomPost(classRoomId);
+        return ResponseEntity.ok(posts);
     }
 
 //        classRoomId로 어디에 post 올릴지 결정하고 Post내용들 추가한다

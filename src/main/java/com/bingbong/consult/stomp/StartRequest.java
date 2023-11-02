@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StartRequest {
     private String type;
-    private Long chatRoomId;
+    private String roomToken;
 }

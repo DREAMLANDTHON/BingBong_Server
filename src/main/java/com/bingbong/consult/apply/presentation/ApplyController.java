@@ -27,9 +27,14 @@ public class ApplyController {
         return ResponseEntity.ok(applyService.findApplyByClassRoomId(classRoomId));
     }
 
+    @GetMapping("/applies/parent/{classRoomId}")
+    public ResponseEntity<List<ApplyDto>> findApplyByClassRoomIdAsParent(@PathVariable Long classRoomId) {
+        return ResponseEntity.ok(applyService.findApplyByClassRoomIdAsParent(classRoomId, "jyj9747@kakao.com"));
+    }
+
     @PostMapping("/applies")
     public ResponseEntity<Long> save(@RequestBody ApplyRequest request) {
-        return ResponseEntity.ok(applyService.saveApply(request));
+        return ResponseEntity.ok(applyService.saveApply(request).getId());
     }
 }
 

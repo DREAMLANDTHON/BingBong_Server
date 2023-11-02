@@ -12,9 +12,12 @@ import java.util.Optional;
 @Repository
 public interface ChatMessageRepo extends JpaRepository<ChatMessage, Long> {
 
-//    @Query("select m from ChatMessage m where m.sendAt between :start and :end")
     Optional<List<ChatMessage>> findBySendAtGreaterThanEqualAndSendAtLessThanEqual(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-    @Query("select m from ChatMessage m where m.chatRoom.id = :chatRoomId")
-    List<ChatMessage> findByChatRoomId(Long chatRoomId);
+//    @Query("select m from ChatMessage m where m.chatRoom.id = :chatRoomId")
+//    List<ChatMessage> findByChatRoomId(Long chatRoomId);
+
+    Optional<List<ChatMessage>> findByRoomTokenAndMemberIdAndSendAtGreaterThanEqualAndSendAtLessThanEqual(String roomToken, Long memberId, LocalDateTime start, LocalDateTime end);
+
+    List<ChatMessage> findByRoomToken(String chatRoomToken);
 }

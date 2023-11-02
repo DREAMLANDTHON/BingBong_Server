@@ -30,6 +30,11 @@ public class ChatRoomController {
     public ResponseEntity<List<ChatRoomResponse>> findChatRoomByClassRoomId(@PathVariable Long id) {
         return ResponseEntity.ok(chatRoomService.findChatRoomByClassRoomId(id));
     }
+
+    @GetMapping("/chatRooms/classrooms/parent/{id}")
+    public ResponseEntity<List<ChatRoomResponse>> findChatRoomByClassRoomIdAsParent(@PathVariable Long id) {
+        return ResponseEntity.ok(chatRoomService.findChatRoomByClassRoomIdAndParent(id, "jyj9747@kakao.com"));
+    }
 }
 
 

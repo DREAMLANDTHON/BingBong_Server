@@ -2,17 +2,19 @@ package com.bingbong.consult.classroom.application;
 
 import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
+import com.bingbong.consult.classroom.posts.Post;
+import com.bingbong.consult.classroom.posts.repository.PostRepository;
 import com.bingbong.consult.classroom.presentation.request.ClassRoomRequest;
+import com.bingbong.consult.classroom.presentation.request.PostRequest;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
 import com.bingbong.consult.classroomMember.domain.repository.ClassRoomMemberRepository;
-import com.bingbong.consult.member.application.MemberService;
 import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
-import com.bingbong.consult.member.presentation.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +25,7 @@ public class ClassRoomService {
     private final ClassRoomRepository classRoomRepository;
     private final MemberRepository memberRepository;
     private final ClassRoomMemberRepository classRoomMemberRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public ClassRoom findById(Long classId) {
@@ -129,5 +132,32 @@ public class ClassRoomService {
                 .teacher(byGroupCode.get().getTeacher().getName())
                 .groupCode(byGroupCode.get().getGroupCode())
                 .build();
+    }
+
+//    public List<ClassRoomResponse> findAllClassRoomMembers(Long classRoomId){
+//        Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+//        classRoom.orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다!!"));
+//        return
+//    }
+
+    public List<Post> getClassRoomPost(Long classRoomId) {
+        List<Post> posts = postRepository.findAll();
+        return posts.stream().map(post1 -> Post.builder().
+                id(post1.getId()).
+                title(post1.getTitle()).
+                content(post1.getContent()).
+                postTime(post1.getPostTime()).build()).collect(Collectors.toList());
+    }
+    @Transactional
+    public Post addClassPost(Long classRoomId, PostRequest postRequest) {
+        ClassRoom classRoom = classRoomRepository.findById(classRoomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 classRoom입니다!!"));
+        Post post = Post.builder()
+                .title(postRequest.getTitle())
+                .content(postRequest.getContent())
+                .classRoom(classRoom)
+                .build();
+
+        return postRepository.save(post);
     }
 }

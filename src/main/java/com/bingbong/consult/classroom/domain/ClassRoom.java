@@ -2,6 +2,7 @@ package com.bingbong.consult.classroom.domain;
 
 import com.bingbong.consult.classroom.posts.Post;
 import com.bingbong.consult.member.domain.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class ClassRoom {
     @JoinColumn(name="member_id")
     private Member teacher;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts;
 

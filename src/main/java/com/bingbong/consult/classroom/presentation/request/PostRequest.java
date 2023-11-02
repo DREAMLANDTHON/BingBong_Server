@@ -9,12 +9,4 @@ public class PostRequest {
      private String title;
     private String content;
      private Long classRoomId;
-
-    public Post toEntity() {
-        return Post.builder()
-                .title(title)
-                .content(content)
-                .classRoom(ClassRoom.builder().build())
-                .build();
-    }
 }

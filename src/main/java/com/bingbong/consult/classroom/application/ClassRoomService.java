@@ -154,12 +154,10 @@ public class ClassRoomService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 classRoom입니다!!"));
         Post post = Post.builder()
                 .title(postRequest.getTitle())
-                .content(postRequest.getTitle())
-                .postTime(postRequest.toEntity().getPostTime())
+                .content(postRequest.getContent())
                 .classRoom(classRoom)
                 .build();
 
         return postRepository.save(post);
-
     }
 }

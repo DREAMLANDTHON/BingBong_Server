@@ -83,4 +83,21 @@ public class ClassRoomMemberService {
         }
         return members;
     }
+
+    public List<MemberDto> findClassRoomMembersByClassRoomId(Long classRoomId) {
+        ClassRoom classRoom = classRoomRepository.findById(classRoomId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ClassRoom입니다."));
+        List<ClassRoomMember> allByClassRoom = classRoomMemberRepository.findAllByClassRoomAndParent(classRoom);
+        List<MemberDto> members = new ArrayList<>();
+        for (ClassRoomMember classRoomMember : allByClassRoom) {
+            Member member = classRoomMember.getMember();
+            members.add(MemberDto.builder()
+                    .id(member.getId())
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .childName(member.getChildName())
+                    .role(member.getRole())
+                    .build());
+        }
+        return members;
+    }
 }

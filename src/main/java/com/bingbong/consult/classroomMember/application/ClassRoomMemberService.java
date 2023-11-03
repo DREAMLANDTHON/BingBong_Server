@@ -101,14 +101,15 @@ public class ClassRoomMemberService {
         }
         return members;
     }
-    public ResponseEntity<?> deleteMemberInClassRoom(String code, Long memberId){
-        Optional<ClassRoom> classByGroupCode = classRoomRepository.findByGroupCode(code);
+    public ResponseEntity<?> deleteMemberInClassRoom(Long groupId, Long memberId){
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(groupId);
         Optional<Member> memberById = memberRepository.findById(memberId);
         if(!memberById.isPresent()){
             return ResponseEntity.badRequest().build();
         }
-        ClassRoomMember classRoomMember = classRoomMemberRepository.getReferenceById(memberId);
-        classRoomMemberRepository.delete(classRoomMember);
+//        ClassRoomMember classRoomMember = classRoomMemberRepository.getReferenceById(memberId);
+//        classRoomMemberRepository.delete(classRoomMember);
+        classRoomMemberRepository.deleteByClassRoomIdAndMemberId(groupId, memberId);
         return null;
     }
 

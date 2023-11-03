@@ -48,7 +48,7 @@ public class ClassRoomMemberController {
         return ResponseEntity.ok(classRoomMemberService.findClassRoomMembersByClassRoomId(classRoomId));
     }
     @DeleteMapping("/{groupId}/DeleteClassMembers/{deletingMemberId}")
-    public void deleteMemberInClassRoom(@PathVariable String groupId,@PathVariable Long deletingMemberId){
+    public void deleteMemberInClassRoom(@PathVariable Long groupId,@PathVariable Long deletingMemberId){
          classRoomMemberService.deleteMemberInClassRoom(groupId,deletingMemberId);
     }
 

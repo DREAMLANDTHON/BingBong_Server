@@ -22,4 +22,6 @@ public interface ClassRoomMemberRepository extends JpaRepository<ClassRoomMember
     List<ClassRoomMember> findAllByClassRoomAndParent(ClassRoom classRoom);
 
     void deleteById(Long memberId);
+
+    void deleteByClassRoomIdAndMemberId(Long groupId, Long memberId);
 }

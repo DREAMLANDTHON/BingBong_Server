@@ -16,6 +16,6 @@ public class KafkaListeners {
 
     @KafkaListener(topics = "test", groupId = "groupId")
     void Listener(ChatMessage message){
-        template.convertAndSend("/sub/"+ message.getRoomToken(), message);
+        template.convertAndSend("/sub/chat/"+ message.getRoomToken(), message);
     }
 }

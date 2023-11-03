@@ -13,4 +13,5 @@ public class ApplyDto {
     ApplyStatus status;
     String parentName;
     Long chatRoomId;
+    String roomToken;
 }

@@ -46,8 +46,9 @@ public class ChatMessageService {
 
     @Transactional
     public void warning(StartRequest request) {
-        if(request.getType().equals("start")) chatMessageRepo.save(ChatMessage.warning(request));
-        else chatMessageRepo.save(ChatMessage.ending(request));
+        ChatRoom chatRoom = chatRoomRepo.findById(request.getChatRoomId()).get();
+        if(request.getType().equals("start")) chatMessageRepo.save(ChatMessage.warning(request, chatRoom.getRoomToken()));
+        else chatMessageRepo.save(ChatMessage.ending(request, chatRoom.getRoomToken()));
     }
 
     public List<ChatMessage> findByRoomToken(String chatRoomToken) {

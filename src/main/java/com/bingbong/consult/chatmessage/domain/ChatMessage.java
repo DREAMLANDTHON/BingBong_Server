@@ -52,9 +52,9 @@ public class ChatMessage implements Serializable {
                 .build();
     }
 
-    public static ChatMessage warning(StartRequest request) {
+    public static ChatMessage warning(StartRequest request, String roomToken) {
         return ChatMessage.builder()
-                .roomToken(request.getRoomToken())
+                .roomToken(roomToken)
                 .type("warning")
                 .memberId(77L)
                 .message("채팅을 시작합니다.\n산업 안전 보건법에 따라 고객응대 근로자 보호조치가 시행되고 있습니다.\n서로간의 배려는 보다 따뜻한 세상을 만듭니다.")
@@ -62,9 +62,9 @@ public class ChatMessage implements Serializable {
                 .build();
     }
 
-    public static ChatMessage ending(StartRequest request) {
+    public static ChatMessage ending(StartRequest request, String roomToken) {
         return ChatMessage.builder()
-                .roomToken(request.getRoomToken())
+                .roomToken(roomToken)
                 .type("warning")
                 .memberId(77L)
                 .message("상담이 종료되었습니다.\n상담내용은 보관되며 상담원 보호용 증거로 채택될 수 있습니다.\n서로간의 배려는 보다 따뜻한 세상을 만듭니다.")

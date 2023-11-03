@@ -25,9 +25,9 @@ public class Apply {
     @Column(nullable = false)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinColumn(name="member_id")
-//    private Member reqMem;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name="member_id")
+    private Member reqMem;
 //
 //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 ////    @JoinColumn(name="class_room_id")
@@ -44,11 +44,15 @@ public class Apply {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public static Apply from(ApplyRequest request, ChatRoom chatRoom) {
+    public static Apply from(ApplyRequest request, ChatRoom chatRoom, Member member) {
         return Apply.builder()
+                .reqMem(member)
                 .chatRoom(chatRoom)
                 .subject(request.getSubject())
                 .status(ApplyStatus.APPLY)
                 .build();
+    }
+    public void updateStatus(){
+        this.status = ApplyStatus.ACCEPT;
     }
 }

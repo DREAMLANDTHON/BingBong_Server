@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 //@SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @Controller
-@RequestMapping("/pub")
+//@RequestMapping("/pub")
 public class MessageController {
     @Autowired
     private KafkaTemplate<String, ChatMessage> kafkaTemplate;
@@ -26,7 +26,7 @@ public class MessageController {
     @Autowired
     private ChatMessageService chatMessageService;
 
-    @PostMapping("/chat")
+    @MessageMapping("/chat")
     public void sendMessage(@RequestBody MessageRequest request) {
         request.setTimestamp(LocalDateTime.now().toString());
 //        if (request.getType().equals("message")) {

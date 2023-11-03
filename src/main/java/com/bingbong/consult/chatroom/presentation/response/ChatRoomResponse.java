@@ -8,5 +8,11 @@ import lombok.Data;
 public class ChatRoomResponse {
     Long id;
     String parentName;
+    Long parentId;
     String subject;
+    String roomToken;
+    boolean session;
+
+
+
 }

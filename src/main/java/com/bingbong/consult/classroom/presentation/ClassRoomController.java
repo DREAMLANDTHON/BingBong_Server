@@ -34,6 +34,7 @@ public class ClassRoomController {
         }
     }
 
+
     @GetMapping("/classRooms/byGroupCode/{groupCode}")
     public ResponseEntity<ClassRoomResponse> findClassRoomByGroupCode(
             @PathVariable String groupCode

@@ -156,6 +156,8 @@ public class ClassRoomService {
                 .classRoom(classRoom)
                 .build();
 
-        return postRepository.save(post);
+        post = postRepository.save(post);
+        classRoom.getPosts().add(post);
+        return post;
     }
 }

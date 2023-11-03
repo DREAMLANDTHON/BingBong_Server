@@ -11,6 +11,7 @@ import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
 import com.bingbong.consult.member.presentation.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,4 +101,15 @@ public class ClassRoomMemberService {
         }
         return members;
     }
+    public ResponseEntity<?> deleteMemberInClassRoom(String code, Long memberId){
+        Optional<ClassRoom> classByGroupCode = classRoomRepository.findByGroupCode(code);
+        Optional<Member> memberById = memberRepository.findById(memberId);
+        if(!memberById.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        ClassRoomMember classRoomMember = classRoomMemberRepository.getReferenceById(memberId);
+        classRoomMemberRepository.delete(classRoomMember);
+        return null;
+    }
+
 }

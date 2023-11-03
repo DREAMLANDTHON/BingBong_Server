@@ -20,4 +20,6 @@ public interface ClassRoomMemberRepository extends JpaRepository<ClassRoomMember
 
     @Query("select c from ClassRoomMember c where c.classRoom = :classRoom and c.member.role = 'parent'")
     List<ClassRoomMember> findAllByClassRoomAndParent(ClassRoom classRoom);
+
+    void deleteById(Long memberId);
 }

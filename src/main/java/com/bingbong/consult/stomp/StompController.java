@@ -57,26 +57,12 @@ public class StompController {
     @MessageMapping(value = "/session")
     public void start(@RequestBody StartRequest request) {
         ChatRoom chatRoom = chatRoomService.sessionUpdate(request);
-        if(chatRoom == null) template.convertAndSend("/sub/chat/" + request.getRoomToken(), "채팅방이 없습니다");
+        if(chatRoom == null) template.convertAndSend("/sub/chat/" + chatRoom.getRoomToken(), "채팅방이 없습니다");
         else {
             chatMessageService.warning(request);
-            template.convertAndSend("/sub/chat/" + chatRoom.getRoomToken(), request.getType());
-            if(request.getType().equals("end")) evaluationService.analyse(chatRoom);
+            template.convertAndSend("/sub/chat/" + chatRoom.getRoomToken(), request);
+            // 구글 활성화 후 주석제거
+            //            if(request.getType().equals("end")) evaluationService.analyse(chatRoom);
         }
     }
-
-//    @MessageMapping(value = "/chat")
-//    public void message(@RequestBody MessageRequest request) {
-////        System.out.println(request.getRoomToken());
-//        if (request.getType().equals("message")) {
-//            try {
-//                Float profanity = GoogleCloudTextAnalysis.analyze(request.getMessage()).get("Profanity");
-//                if(profanity >0.9f) request.setMessage("Worden이 부적절한 메세지를 숨김처리하였습니다.");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            chatMessageService.save(request.getRoomToken(), request);
-//            template.convertAndSend("/sub/chat/" + request.getRoomToken(), request);
-//        }
-//    }
 }

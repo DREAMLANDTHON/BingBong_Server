@@ -53,7 +53,7 @@ public class EvaluationService {
     public String analyse(ChatRoom chatRoom) {
 
         LocalDateTime start = chatRoom.getTimePin();
-        chatRoomService.findChatRoom(chatRoom.getId()).update();
+        chatRoomService.findChatRoomById(chatRoom.getId()).update();
         LocalDateTime end = LocalDateTime.now();
         Optional<List<ChatMessage>> messages = chatMessageRepo.findByRoomTokenAndMemberIdAndSendAtGreaterThanEqualAndSendAtLessThanEqual(chatRoom.getRoomToken(), chatRoom.getParent().getId(), start, end);
         System.out.println("messages = " + messages);

@@ -44,6 +44,11 @@ public class ChatRoomService {
         ChatRoom ret = this.findById(id);
         return ret;
     }
+    @Transactional
+    public ChatRoom findChatRoomById(Long id) {
+        ChatRoom ret = this.findById(id);
+        return ret;
+    }
 
     @Transactional
     public List<ChatRoomResponse> findChatRoomByClassRoomId(Long id) {
@@ -54,6 +59,8 @@ public class ChatRoomService {
                     if(applyInfo.isPresent()) subject = applyInfo.get().getSubject();
                     return ChatRoomResponse.builder()
                             .id(chatRoom.getId())
+                            .session(chatRoom.isSession())
+                            .roomToken(chatRoom.getRoomToken())
                             .parentName(chatRoom.getParent().getName())
                             .subject(subject)
                             .build();
@@ -67,9 +74,15 @@ public class ChatRoomService {
 
     @Transactional
     public ChatRoom sessionUpdate(StartRequest request) {
-        Optional<ChatRoom> ret = chatRoomRepo.findByRoomToken(request.getRoomToken());
+        Optional<ChatRoom> ret = chatRoomRepo.findById(request.getChatRoomId());
         if(ret.isPresent()) {
             ret.get().updateSession(request.getType());
+            if(request.getType().equals("start")) {
+                System.out.println(ret.get().getClassRoom().getId());
+                System.out.println(ret.get().getParent().getId());
+                Apply apply = applyRepo.findByClassRoomIdAndMemberId(ret.get().getId(), ret.get().getParent().getId()).get();
+                apply.updateStatus();
+            }
             return ret.get();
         }
         else return null;
@@ -90,6 +103,7 @@ public class ChatRoomService {
         String recentSubject = (recentApplyInfo.size() == 0) ? "아직 신청된 주제가 없습니다." : recentApplyInfo.get(0).getSubject();
         return Arrays.asList(ChatRoomResponse.builder()
                 .id(chatRoom.get().getId())
+                .session(chatRoom.get().isSession())
                 .parentName(chatRoom.get().getParent().getName())
                 .subject(recentSubject)
                 .build());

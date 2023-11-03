@@ -24,4 +24,8 @@ public interface ApplyRepo extends JpaRepository<Apply, Long> {
     Optional<Apply> findByRoomTokenAndMemberId(String roomToken, Long memberId);
 
     List<Apply> findAllByChatRoomOrderByCreatedAtDesc(ChatRoom chatRoom);
+
+    @Query("select a from Apply a where a.chatRoom.id = :classId and a.reqMem.id = :memberId")
+    Optional<Apply> findByClassRoomIdAndMemberId(Long classId, Long memberId);
+
 }

@@ -1,7 +1,10 @@
 package com.bingbong.consult.classroom.presentation;
 
 import com.bingbong.consult.classroom.application.ClassRoomService;
+import com.bingbong.consult.classroom.posts.Post;
+import com.bingbong.consult.classroom.posts.repository.PostRepository;
 import com.bingbong.consult.classroom.presentation.request.ClassRoomRequest;
+import com.bingbong.consult.classroom.presentation.request.PostRequest;
 import com.bingbong.consult.classroom.presentation.response.ClassRoomResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import java.util.List;
 @SecurityRequirement(name = "Bearer Authentication")
 public class ClassRoomController {
     private final ClassRoomService classRoomService;
+    private final PostRepository postRepository;
 
     @PostMapping("/classRooms")
     public ResponseEntity<String> createClassRoom(@RequestBody ClassRoomRequest form) {
@@ -62,5 +66,17 @@ public class ClassRoomController {
     ) {
         List<ClassRoomResponse> classRoomResponse = classRoomService.findClassRoomByParentId(parentId);
         return ResponseEntity.ok(classRoomResponse);
+    }
+
+    @GetMapping("/{classRoomId}/posts")
+    public ResponseEntity<List<Post>> getClassRoomPost(@PathVariable Long classRoomId){
+        List<Post> posts = classRoomService.getClassRoomPost(classRoomId);
+        return ResponseEntity.ok(posts);
+    }
+
+//        classRoomId로 어디에 post 올릴지 결정하고 Post내용들 추가한다
+    @PostMapping("/{classRoomId}/addPosts")
+    public ResponseEntity<Post> addClassPost(@PathVariable Long classRoomId,@RequestBody PostRequest post){
+        return ResponseEntity.ok(classRoomService.addClassPost(classRoomId, post));
     }
 }

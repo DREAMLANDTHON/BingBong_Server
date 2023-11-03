@@ -11,6 +11,7 @@ import com.bingbong.consult.member.domain.Member;
 import com.bingbong.consult.member.domain.repository.MemberRepository;
 import com.bingbong.consult.member.presentation.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,4 +84,33 @@ public class ClassRoomMemberService {
         }
         return members;
     }
+
+    public List<MemberDto> findClassRoomMembersByClassRoomId(Long classRoomId) {
+        ClassRoom classRoom = classRoomRepository.findById(classRoomId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ClassRoom입니다."));
+        List<ClassRoomMember> allByClassRoom = classRoomMemberRepository.findAllByClassRoomAndParent(classRoom);
+        List<MemberDto> members = new ArrayList<>();
+        for (ClassRoomMember classRoomMember : allByClassRoom) {
+            Member member = classRoomMember.getMember();
+            members.add(MemberDto.builder()
+                    .id(member.getId())
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .childName(member.getChildName())
+                    .role(member.getRole())
+                    .build());
+        }
+        return members;
+    }
+    public ResponseEntity<?> deleteMemberInClassRoom(Long groupId, Long memberId){
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(groupId);
+        Optional<Member> memberById = memberRepository.findById(memberId);
+        if(!memberById.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+//        ClassRoomMember classRoomMember = classRoomMemberRepository.getReferenceById(memberId);
+//        classRoomMemberRepository.delete(classRoomMember);
+        classRoomMemberRepository.deleteByClassRoomIdAndMemberId(groupId, memberId);
+        return null;
+    }
+
 }

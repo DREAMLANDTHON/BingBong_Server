@@ -81,7 +81,7 @@ public class ChatRoomService {
             if(request.getType().equals("start")) {
                 System.out.println(ret.get().getClassRoom().getId());
                 System.out.println(ret.get().getParent().getId());
-                Apply apply = applyRepo.findByClassRoomIdAndMemberId(ret.get().getId(), ret.get().getParent().getId()).get();
+                Apply apply = applyRepo.findByClassRoomIdAndMemberId(ret.get().getClassRoom().getId(), ret.get().getParent().getId()).get();
                 apply.updateStatus();
             }
             return ret.get();

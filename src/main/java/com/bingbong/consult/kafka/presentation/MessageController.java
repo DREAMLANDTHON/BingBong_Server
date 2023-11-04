@@ -48,9 +48,14 @@ public class MessageController {
 ////                Float profanity = 0.0f;
 //            if (profanity > 0.9f) {
 //                request.setMessage("Worden이 부적절한 메세지를 숨김처리하였습니다.");
-//                request.setType("warning");
+//
 //            }
-            ChatMessage message = chatMessageService.save(request);
+            if(request.getMessage().contains("씨발") ||
+                    request.getMessage().contains("병신") ||
+                    request.getMessage().contains("죽을래")
+            )request.setMessage("Worden이 부적절한 메세지를 숨김처리하였습니다.");
+
+                ChatMessage message = chatMessageService.save(request);
             kafkaTemplate.send("test", message);
         } catch (Exception e) {
             e.printStackTrace();

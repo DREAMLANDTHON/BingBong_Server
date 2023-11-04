@@ -27,9 +27,9 @@ public class ApplyController {
         return ResponseEntity.ok(applyService.findApplyByClassRoomId(classRoomId));
     }
 
-    @GetMapping("/applies/parent/{classRoomId}")
-    public ResponseEntity<List<ApplyDto>> findApplyByClassRoomIdAsParent(@PathVariable Long classRoomId) {
-        return ResponseEntity.ok(applyService.findApplyByClassRoomIdAsParent(classRoomId, "jyj9747@kakao.com"));
+    @PostMapping("/applies/parent")
+    public ResponseEntity<ApplyDto> findApplyByClassRoomIdAndParentId(@RequestBody ApplyReq request) {
+        return ResponseEntity.ok(applyService.findApplyByClassRoomIdAndParentId(request));
     }
     @GetMapping("/applies/{applyId}")
     public ResponseEntity<ApplyDto> findById(@PathVariable Long applyId){

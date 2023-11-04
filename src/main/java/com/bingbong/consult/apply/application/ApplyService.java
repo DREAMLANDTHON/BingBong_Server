@@ -3,6 +3,7 @@ package com.bingbong.consult.apply.application;
 import com.bingbong.consult.apply.domain.Apply;
 import com.bingbong.consult.apply.domain.repo.ApplyRepo;
 import com.bingbong.consult.apply.presentation.ApplyDto;
+import com.bingbong.consult.apply.presentation.ApplyReq;
 import com.bingbong.consult.chatroom.domain.ChatRoom;
 import com.bingbong.consult.chatroom.domain.repo.ChatRoomRepo;
 import com.bingbong.consult.classroom.application.ClassRoomService;
@@ -41,7 +42,6 @@ public class ApplyService {
 
     @Transactional
     public Apply saveApply(ApplyRequest request){
-
         Optional<Apply> ret = applyRepo.findByClassRoomIdAndMemberId(request.getClassId(), request.getMemberId());
         if(ret.isPresent()) return ret.get();
 
@@ -52,10 +52,9 @@ public class ApplyService {
         parent.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Member입니다."));
 
         Optional<ChatRoom> chatRoom = chatRoomRepo.findByClassRoomIdAndParentId(request.getClassId(), request.getMemberId());
-        chatRoomRepo.save(ChatRoom.from(classRoom.get(), parent.get()));
-//        chatRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ChatRoom입니다."));
-
+        chatRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ChatRoom입니다."));
         return applyRepo.save(Apply.from(request, chatRoom.get(), parent.get()));
+
     }
 
     public List<ApplyDto> findApplyByClassRoomId(Long classRoomId) {
@@ -82,28 +81,26 @@ public class ApplyService {
         return false;
     }
 
-    public List<ApplyDto> findApplyByClassRoomIdAsParent(Long classRoomId, String parentEmail) {
-        Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+    public ApplyDto findApplyByClassRoomIdAndParentId(ApplyReq request) {
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(request.getClassRoomId());
         classRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ClassRoom입니다."));
 
-        Optional<Member> parent = memberRepository.findByEmailAndRole(parentEmail, "parent");
+        Optional<Member> parent = memberRepository.findById(request.getParentId());
         parent.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Member입니다."));
 
         Optional<ChatRoom> chatRoom = chatRoomRepo.findByClassRoomIdAndParentId(classRoom.get().getId(), parent.get().getId());
 //        Optional<ChatRoom> chatRoom = chatRoomRepo.findByClassRoomAndParent(classRoom.get(), parent.get());
         chatRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ChatRoom입니다."));
 
-        List<Apply> applies = applyRepo.findAllByChatRoomOrderByCreatedAtDesc(chatRoom.get());
-        return applies.stream().map(
-                apply -> ApplyDto.builder()
-                        .id(apply.getId())
-                        .roomToken(apply.getChatRoom().getRoomToken())
-                        .subject(apply.getSubject())
-                        .status(apply.getStatus())
-                        .parentName(apply.getChatRoom().getParent().getName())
-                        .chatRoomId(apply.getChatRoom().getId())
-                        .build()
-        ).collect(Collectors.toList());
+        Apply apply = applyRepo.findByClassRoomIdAndMemberId(request.getClassRoomId(), request.getParentId()).get();
+        return ApplyDto.builder()
+                .id(apply.getId())
+                .roomToken(apply.getChatRoom().getRoomToken())
+                .subject(apply.getSubject())
+                .status(apply.getStatus())
+                .parentName(apply.getChatRoom().getParent().getName())
+                .chatRoomId(apply.getChatRoom().getId())
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -118,6 +115,8 @@ public class ApplyService {
                 .status(ret.getStatus())
                 .build();
     }
+
+
 
 //    public Apply findApplyByClassRoomIdAndMemberId(ApplyRequest request) {
 //        return applyRepo.findByChatRoomIdAndMemberId(request.getClassId(), request.getMemberId());

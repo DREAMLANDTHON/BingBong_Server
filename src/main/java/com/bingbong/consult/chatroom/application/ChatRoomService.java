@@ -4,6 +4,7 @@ import com.bingbong.consult.apply.domain.Apply;
 import com.bingbong.consult.apply.domain.repo.ApplyRepo;
 import com.bingbong.consult.chatroom.domain.ChatRoom;
 import com.bingbong.consult.chatroom.domain.repo.ChatRoomRepo;
+import com.bingbong.consult.chatroom.presentation.ChatRoomReq;
 import com.bingbong.consult.chatroom.presentation.response.ChatRoomResponse;
 import com.bingbong.consult.classroom.domain.ClassRoom;
 import com.bingbong.consult.classroom.domain.repository.ClassRoomRepository;
@@ -88,11 +89,11 @@ public class ChatRoomService {
         else return null;
     }
 
-    public List<ChatRoomResponse> findChatRoomByClassRoomIdAndParent(Long classRoomId, String parentEmail) {
-        Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+    public ChatRoomResponse findChatRoomByClassRoomIdAndParent(ChatRoomReq request) {
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(request.getClassRoomId());
         classRoom.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ClassRoom입니다."));
 
-        Optional<Member> parent = memberRepository.findByEmailAndRole(parentEmail, "parent");
+        Optional<Member> parent = memberRepository.findById(request.getParentId());
         parent.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Member입니다."));
 
         Optional<ChatRoom> chatRoom = chatRoomRepo.findByClassRoomAndParent(classRoom.get(), parent.get());
@@ -101,11 +102,11 @@ public class ChatRoomService {
         List<Apply> recentApplyInfo = applyRepo.findAllByChatRoomOrderByCreatedAtDesc(chatRoom.get());
 
         String recentSubject = (recentApplyInfo.size() == 0) ? "아직 신청된 주제가 없습니다." : recentApplyInfo.get(0).getSubject();
-        return Arrays.asList(ChatRoomResponse.builder()
+        return ChatRoomResponse.builder()
                 .id(chatRoom.get().getId())
                 .session(chatRoom.get().isSession())
                 .parentName(chatRoom.get().getParent().getName())
                 .subject(recentSubject)
-                .build());
+                .build();
     }
 }
